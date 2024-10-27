@@ -52,7 +52,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public JWTAuthResponse refresh(String accessToken) {
-        return null;
+        String userEmail = jwtService.extractUserEmail(accessToken);
+        User fetchedUser = userDao.findByEmail(userEmail);
+        if (fetchedUser == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return JWTAuthResponse.builder()
+                .token(jwtService.generateToken(userEmail))
+                .build();
     }
 
     @Override
