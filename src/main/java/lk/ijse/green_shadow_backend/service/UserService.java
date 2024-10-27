@@ -5,8 +5,10 @@ import lk.ijse.green_shadow_backend.entity.impl.User;
 import lk.ijse.green_shadow_backend.secure.JWTAuthResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.management.relation.InvalidRoleInfoException;
+
 public interface UserService {
-    User register(UserDTO userDTO);
+    User register(UserDTO userDTO) throws InvalidRoleInfoException;
     JWTAuthResponse login(UserDTO userDTO);
     JWTAuthResponse refresh(String accessToken);
 }

@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.InvalidRoleInfoException;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -18,30 +20,32 @@ public class UserController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> register(@RequestBody UserDTO userDTO) {
-        try{
+        try {
             userService.register(userDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e){
+        } catch (InvalidRoleInfoException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JWTAuthResponse> login(@RequestBody UserDTO userDTO) {
-       try{
-           return ResponseEntity.ok(userService.login(userDTO));
-       }catch (Exception e){
-           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-       }
+        try {
+            return ResponseEntity.ok(userService.login(userDTO));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping(value = "/refresh")
     public ResponseEntity<JWTAuthResponse> refresh(@RequestParam String accessToken) {
-        try{
+        try {
             return ResponseEntity.ok(userService.refresh(accessToken));
-        }catch(UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,6 +1,10 @@
 package lk.ijse.green_shadow_backend.dto.impl;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lk.ijse.green_shadow_backend.dto.SuperDTO;
+import lk.ijse.green_shadow_backend.entity.Gender;
+import lk.ijse.green_shadow_backend.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +22,8 @@ public class StaffDTO implements SuperDTO {
     private String firstName;
     private String lastName;
     private String designation;
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     private Date joinedDate;
     private Date dOB;
     private String addressLine1;
@@ -28,7 +33,8 @@ public class StaffDTO implements SuperDTO {
     private String addressLine5;
     private String contactNumber;
     private String email;
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private List<String> fieldCodes;
     private List<String> vehicleIds;
     private List<String> equipmentIds;
