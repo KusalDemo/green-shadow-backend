@@ -1,6 +1,7 @@
 package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.UserDTO;
+import lk.ijse.green_shadow_backend.secure.JWTAuthResponse;
 import lk.ijse.green_shadow_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,12 @@ public class UserController {
     }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login() {
-        return null;
+    public ResponseEntity<JWTAuthResponse> login(@RequestBody UserDTO userDTO) {
+       try{
+           return ResponseEntity.ok(userService.login(userDTO));
+       }catch (Exception e){
+           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+       }
     }
 
     @PostMapping(value = "/refresh", consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -7,6 +7,9 @@ import lk.ijse.green_shadow_backend.secure.JWTAuthResponse;
 import lk.ijse.green_shadow_backend.service.UserService;
 import lk.ijse.green_shadow_backend.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +22,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private UserDAO userDao;
     @Autowired
     private Mapping mapper;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JWTService jwtService;
 
     private BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
 
@@ -30,6 +37,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public JWTAuthResponse login(UserDTO userDTO) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userDTO.getEmail(),
+                        userDTO.getPassword())
+        );
+        if (auth.isAuthenticated()) {
+            return JWTAuthResponse.builder()
+                    .token(jwtService.generateToken(userDTO.getEmail()))
+                    .build();
+        }
         return null;
     }
 
