@@ -1,7 +1,6 @@
 package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.UserDTO;
-import lk.ijse.green_shadow_backend.entity.impl.User;
 import lk.ijse.green_shadow_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

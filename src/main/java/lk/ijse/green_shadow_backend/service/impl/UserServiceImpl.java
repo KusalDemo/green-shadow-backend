@@ -7,11 +7,14 @@ import lk.ijse.green_shadow_backend.secure.JWTAuthResponse;
 import lk.ijse.green_shadow_backend.service.UserService;
 import lk.ijse.green_shadow_backend.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserDAO userDao;
     @Autowired
@@ -33,5 +36,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public JWTAuthResponse refresh(String accessToken) {
         return null;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User fetchedUser = userDao.findByEmail(email);
+        if(fetchedUser == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return fetchedUser;
     }
 }
