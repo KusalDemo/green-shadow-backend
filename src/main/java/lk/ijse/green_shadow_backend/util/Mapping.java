@@ -34,4 +34,5 @@ public class Mapping {
 
     public Log mapToLog(LogDTO logDTO){return modelMapper.map(logDTO, Log.class);}
     public LogDTO mapToLogDTO(Log log){return modelMapper.map(log, LogDTO.class);}
+    public List<LogDTO> mapToLogDTOList(List<Log> logList){return logList.stream().map(this::mapToLogDTO).toList();}
 }
