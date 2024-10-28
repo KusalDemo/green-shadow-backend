@@ -73,4 +73,9 @@ public class LogServiceImpl implements LogService {
             System.err.println("Error: "+e.getMessage());
         }
     }
+
+    @Override
+    public LogDTO findLog(String logCode) {
+        return mapper.mapToLogDTO(logDao.findById(logCode).get());
+    }
 }

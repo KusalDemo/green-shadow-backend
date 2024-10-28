@@ -68,4 +68,9 @@ public class StaffServiceImpl implements StaffService {
     public void deleteStaff(String id) {
         staffDao.deleteById(id);
     }
+
+    @Override
+    public StaffDTO findStaff(String id) {
+        return mapper.mapToStaffDTO(staffDao.findById(id).get());
+    }
 }

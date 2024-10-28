@@ -62,5 +62,10 @@ public class EquipmentServiceImpl implements EquipmentService {
         }
     }
 
+    @Override
+    public EquipmentDTO findEquipment(String equipmentId) {
+        return mapper.mapToEquipmentDTO(equipmentDao.findById(equipmentId).get());
+    }
+
 
 }

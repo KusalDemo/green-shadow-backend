@@ -71,4 +71,9 @@ public class FieldServiceImpl implements FieldService {
             System.err.println("Error: "+e.getMessage());
         }
     }
+
+    @Override
+    public FieldDTO findField(String fieldCode) {
+        return mapper.mapToFieldDTO(fieldDao.findById(fieldCode).get());
+    }
 }

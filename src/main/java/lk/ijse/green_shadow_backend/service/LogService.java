@@ -10,4 +10,5 @@ public interface LogService {
     List<LogDTO> getAllLogs();
     void deleteLog(String logCode);
     void updateLog(String logCode,LogDTO logDTO);
+    LogDTO findLog(String logCode);
 }

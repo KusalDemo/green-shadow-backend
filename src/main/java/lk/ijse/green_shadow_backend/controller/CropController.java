@@ -1,10 +1,8 @@
 package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.CropDTO;
-import lk.ijse.green_shadow_backend.entity.impl.Crop;
 import lk.ijse.green_shadow_backend.service.CropService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
-import lk.ijse.green_shadow_backend.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,8 +18,6 @@ import java.util.List;
 public class CropController {
     @Autowired
     private CropService cropService;
-    @Autowired
-    private Mapping mapper;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
@@ -36,7 +32,7 @@ public class CropController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CropDTO> getAllCrops() {
-        return mapper.mapToCropDTOList(cropService.getAllCrops());
+        return cropService.getAllCrops();
     }
 
     @PutMapping(value = "/{cropCode}",consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -77,5 +73,4 @@ public class CropController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

@@ -32,8 +32,8 @@ public class CropServiceImpl implements CropService {
     }
 
     @Override
-    public List<Crop> getAllCrops() {
-        return cropDAO.findAll();
+    public List<CropDTO> getAllCrops() {
+        return mapper.mapToCropDTOList(cropDAO.findAll());
     }
 
     @Override
@@ -52,6 +52,11 @@ public class CropServiceImpl implements CropService {
     @Override
     public void deleteCrop(String cropCode) {
         cropDAO.deleteById(cropCode);
+    }
+
+    @Override
+    public CropDTO findCrop(String cropCode) {
+        return mapper.mapToCropDTO(cropDAO.findById(cropCode).get());
     }
 
     @Override

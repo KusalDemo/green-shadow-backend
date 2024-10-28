@@ -63,4 +63,9 @@ public class VehicleServiceImpl implements VehicleService {
             System.err.println("Error: "+e.getMessage());
         }
     }
+
+    @Override
+    public VehicleDTO findVehicle(String vehicleCode) {
+        return mapper.mapToVehicleDTO(vehicleDao.findById(vehicleCode).get());
+    }
 }

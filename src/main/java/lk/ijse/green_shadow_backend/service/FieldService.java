@@ -12,4 +12,5 @@ public interface FieldService {
     void updateField(String fieldCode,FieldDTO fieldDTO);
     void deleteField(String fieldCode);
     void uploadFieldImage(String fieldCode, String image1, String image2);
+    FieldDTO findField(String fieldCode);
 }
