@@ -40,6 +40,7 @@ public class CropController {
     }
 
     @PutMapping(value = "/{cropCode}",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> updateCrop(@PathVariable("cropCode") String cropCode,@RequestBody CropDTO cropDTO) {
         try{
             cropDTO.setCropCode(cropCode);
@@ -51,6 +52,7 @@ public class CropController {
     }
 
     @DeleteMapping(value = "/{cropCode}")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> deleteCrop(@PathVariable("cropCode") String cropCode) {
         try{
             cropService.deleteCrop(cropCode);
@@ -61,6 +63,7 @@ public class CropController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> uploadCropImage(
             @RequestPart("cropCode") String cropCode,
             @RequestPart("image") MultipartFile image
