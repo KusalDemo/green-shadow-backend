@@ -1,11 +1,7 @@
 package lk.ijse.green_shadow_backend.util;
 
-import lk.ijse.green_shadow_backend.dto.impl.CropDTO;
-import lk.ijse.green_shadow_backend.dto.impl.FieldDTO;
-import lk.ijse.green_shadow_backend.dto.impl.UserDTO;
-import lk.ijse.green_shadow_backend.entity.impl.Crop;
-import lk.ijse.green_shadow_backend.entity.impl.Field;
-import lk.ijse.green_shadow_backend.entity.impl.User;
+import lk.ijse.green_shadow_backend.dto.impl.*;
+import lk.ijse.green_shadow_backend.entity.impl.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,4 +26,12 @@ public class Mapping {
     public FieldDTO mapToFieldDTO(Field field){return modelMapper.map(field, FieldDTO.class);}
     public List<FieldDTO> mapToFieldDTOList(List<Field> fieldList){return fieldList.stream().map(this::mapToFieldDTO).toList();}
     public List<Field> mapToFieldList(List<FieldDTO> fieldDTOList){return fieldDTOList.stream().map(this::mapToField).toList();}
+
+    public Staff mapToStaff(StaffDTO staffDto){return modelMapper.map(staffDto, Staff.class);}
+    public StaffDTO mapToStaffDTO(Staff staff){return modelMapper.map(staff, StaffDTO.class);}
+    public List<StaffDTO> mapToStaffDTOList(List<Staff> staffList){return staffList.stream().map(this::mapToStaffDTO).toList();}
+    public List<Staff> mapToStaffList(List<StaffDTO> staffDTOList){return staffDTOList.stream().map(this::mapToStaff).toList();}
+
+    public Log mapToLog(LogDTO logDTO){return modelMapper.map(logDTO, Log.class);}
+    public LogDTO mapToLogDTO(Log log){return modelMapper.map(log, LogDTO.class);}
 }
