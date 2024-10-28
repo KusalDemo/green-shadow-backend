@@ -1,9 +1,6 @@
 package lk.ijse.green_shadow_backend.entity.impl;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lk.ijse.green_shadow_backend.entity.SuperEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,11 +17,12 @@ public class Crop implements SuperEntity {
     private String cropCode;
     private String cropCommonName;
     private String cropScientificName;
+    @Column(columnDefinition = "LONGTEXT")
     private String cropImage;
     private String category;
     private String cropSeason;
     @ManyToOne
-    @JoinColumn(name = "fieldCode",nullable = false)
+    @JoinColumn(name = "fieldCode")
     private Field field;
     @ManyToOne
     @JoinColumn(name = "logCode")

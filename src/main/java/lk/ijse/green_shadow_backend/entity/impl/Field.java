@@ -25,7 +25,9 @@ public class Field implements SuperEntity {
     private List<Crop> crops;
     @ManyToMany(mappedBy = "fields",fetch = FetchType.EAGER)
     private List<Staff> staff;
+    @Column(columnDefinition = "LONGTEXT")
     private String image1;
+    @Column(columnDefinition = "LONGTEXT")
     private String image2;
     @OneToMany(mappedBy = "field",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Equipment> equipments;

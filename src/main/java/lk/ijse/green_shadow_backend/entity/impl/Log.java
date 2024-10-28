@@ -20,6 +20,7 @@ public class Log implements SuperEntity {
     private String logCode;
     private Date logDate;
     private String logDetails;
+    @Column(columnDefinition = "LONGTEXT")
     private String observedImage;
     @OneToMany(mappedBy = "log",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Field> fields;
