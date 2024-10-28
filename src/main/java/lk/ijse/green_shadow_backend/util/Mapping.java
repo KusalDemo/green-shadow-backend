@@ -35,4 +35,10 @@ public class Mapping {
     public Log mapToLog(LogDTO logDTO){return modelMapper.map(logDTO, Log.class);}
     public LogDTO mapToLogDTO(Log log){return modelMapper.map(log, LogDTO.class);}
     public List<LogDTO> mapToLogDTOList(List<Log> logList){return logList.stream().map(this::mapToLogDTO).toList();}
+    public List<Log> mapToLogList(List<LogDTO> logDTOList){return logDTOList.stream().map(this::mapToLog).toList();}
+
+    public Vehicle mapToVehicle(VehicleDTO vehicleDTO){return modelMapper.map(vehicleDTO, Vehicle.class);}
+    public VehicleDTO mapToVehicleDTO(Vehicle vehicle){return modelMapper.map(vehicle, VehicleDTO.class);}
+    public List<VehicleDTO> mapToVehicleDTOList(List<Vehicle> vehicleList){return vehicleList.stream().map(this::mapToVehicleDTO).toList();}
+    public List<Vehicle> mapToVehicleList(List<VehicleDTO> vehicleDTOList){return vehicleDTOList.stream().map(this::mapToVehicle).toList();}
 }

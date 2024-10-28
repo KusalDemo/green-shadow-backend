@@ -20,11 +20,10 @@ public class Vehicle implements SuperEntity {
     private String vehicleCategory;
     private String fuelType;
     private String status;
-    private String allocatedStaffMemberDetails;
     private String remarks;
 
     @ManyToOne
     @JoinColumn(name = "staffId")
-    private Staff staff;
+    private Staff allocatedStaffMemberDetails;
 
 }
