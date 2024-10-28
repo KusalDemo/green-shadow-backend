@@ -61,7 +61,7 @@ public class CropController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> saveImage(
+    public ResponseEntity<Void> uploadCropImage(
             @RequestPart("cropCode") String cropCode,
             @RequestPart("image") MultipartFile image
     ){

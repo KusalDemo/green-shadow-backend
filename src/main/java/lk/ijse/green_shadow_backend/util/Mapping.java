@@ -1,8 +1,10 @@
 package lk.ijse.green_shadow_backend.util;
 
 import lk.ijse.green_shadow_backend.dto.impl.CropDTO;
+import lk.ijse.green_shadow_backend.dto.impl.FieldDTO;
 import lk.ijse.green_shadow_backend.dto.impl.UserDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Crop;
+import lk.ijse.green_shadow_backend.entity.impl.Field;
 import lk.ijse.green_shadow_backend.entity.impl.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,4 +26,8 @@ public class Mapping {
     public List<CropDTO> mapToCropDTOList(List<Crop> cropList){return cropList.stream().map(this::mapToCropDTO).toList();}
     public List<Crop> mapToCropList(List<CropDTO> cropDTOList){return cropDTOList.stream().map(this::mapToCrop).toList();}
 
+    public Field mapToField(FieldDTO fieldDTO){return modelMapper.map(fieldDTO, Field.class);}
+    public FieldDTO mapToFieldDTO(Field field){return modelMapper.map(field, FieldDTO.class);}
+    public List<FieldDTO> mapToFieldDTOList(List<Field> fieldList){return fieldList.stream().map(this::mapToFieldDTO).toList();}
+    public List<Field> mapToFieldList(List<FieldDTO> fieldDTOList){return fieldDTOList.stream().map(this::mapToField).toList();}
 }
