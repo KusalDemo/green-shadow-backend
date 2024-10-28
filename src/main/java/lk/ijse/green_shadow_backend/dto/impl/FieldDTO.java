@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.geo.Point;
 
 import java.util.List;
 
@@ -15,10 +16,10 @@ import java.util.List;
 public class FieldDTO implements SuperDTO {
     private String fieldCode;
     private String fieldName;
-    private String fieldLocation;
+    private Point fieldLocation;
     private Double extentSizeOfField;
     private List<CropDTO> crops;
-    private List<String> staffIds;
+    private List<StaffDTO> staff;
     private String image1;
     private String image2;
     private List<EquipmentDTO> equipments;

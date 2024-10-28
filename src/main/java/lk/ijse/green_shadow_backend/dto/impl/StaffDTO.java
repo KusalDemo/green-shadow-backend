@@ -35,7 +35,8 @@ public class StaffDTO implements SuperDTO {
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private List<String> fieldCodes;
-    private List<String> vehicleIds;
-    private List<String> equipmentIds;
+    private List<FieldDTO> fields;
+    private List<VehicleDTO> vehicles;
+    private List<EquipmentDTO> equipments;
+    private String logCode;
 }

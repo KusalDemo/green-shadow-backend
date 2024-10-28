@@ -26,5 +26,5 @@ public class Log implements SuperEntity {
     @OneToMany(mappedBy = "log",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Crop> crops;
     @OneToMany(mappedBy = "log",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-    private List<Vehicle> vehicles;
+    private List<Staff> staff;
 }

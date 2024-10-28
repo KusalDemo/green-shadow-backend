@@ -44,7 +44,10 @@ public class Staff implements SuperEntity {
     )
     private List<Field> fields;
     @OneToMany(mappedBy = "staff",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-    private List<Vehicle> vehicle;
+    private List<Vehicle> vehicles;
     @OneToMany(mappedBy = "staff",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-    private List<Equipment> equipment;
+    private List<Equipment> equipments;
+    @ManyToOne
+    @JoinColumn(name = "logCode")
+    private Log log;
 }

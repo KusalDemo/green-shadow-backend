@@ -27,7 +27,4 @@ public class Vehicle implements SuperEntity {
     @JoinColumn(name = "staffId")
     private Staff staff;
 
-    @ManyToOne
-    @JoinColumn(name = "logCode")
-    private Log log;
 }

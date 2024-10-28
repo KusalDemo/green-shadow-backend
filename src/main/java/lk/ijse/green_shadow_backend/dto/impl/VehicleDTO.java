@@ -19,5 +19,4 @@ public class VehicleDTO implements SuperDTO {
     private String allocatedStaffMemberDetails;
     private String remarks;
     private String staffId;
-    private String logCode;
 }
