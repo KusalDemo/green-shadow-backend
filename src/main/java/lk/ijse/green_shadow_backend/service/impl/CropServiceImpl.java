@@ -37,6 +37,24 @@ public class CropServiceImpl implements CropService {
     }
 
     @Override
+    public void updateCrop(CropDTO cropDTO) {
+        Optional<Crop> fetchedCrop = cropDAO.findById(cropDTO.getCropCode());
+        if (fetchedCrop.isPresent()) {
+            Crop crop = fetchedCrop.get();
+            crop.setCropCommonName(cropDTO.getCropCommonName());
+            crop.setCropScientificName(cropDTO.getCropScientificName());
+            crop.setCategory(cropDTO.getCategory());
+            crop.setCropSeason(cropDTO.getCropSeason());
+            cropDAO.save(crop);
+        }
+    }
+
+    @Override
+    public void deleteCrop(String cropCode) {
+        cropDAO.deleteById(cropCode);
+    }
+
+    @Override
     public void saveImage(String cropCode,String image) {
         Optional<Crop> fetchedCrop = cropDAO.findById(cropCode);
         if(fetchedCrop.isPresent()){
@@ -45,6 +63,4 @@ public class CropServiceImpl implements CropService {
             cropDAO.save(crop);
         }
     }
-
-
 }

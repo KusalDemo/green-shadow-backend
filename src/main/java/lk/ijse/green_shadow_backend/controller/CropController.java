@@ -39,6 +39,27 @@ public class CropController {
         return mapper.mapToCropDTOList(cropService.getAllCrops());
     }
 
+    @PutMapping(value = "/{cropCode}",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> updateCrop(@PathVariable("cropCode") String cropCode,@RequestBody CropDTO cropDTO) {
+        try{
+            cropDTO.setCropCode(cropCode);
+            cropService.updateCrop(cropDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping(value = "/{cropCode}")
+    public ResponseEntity<Void> deleteCrop(@PathVariable("cropCode") String cropCode) {
+        try{
+            cropService.deleteCrop(cropCode);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> saveImage(
             @RequestPart("cropCode") String cropCode,
