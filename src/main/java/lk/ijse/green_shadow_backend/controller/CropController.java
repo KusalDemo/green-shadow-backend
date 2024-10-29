@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.controller;
 import lk.ijse.green_shadow_backend.dto.impl.CropDTO;
 import lk.ijse.green_shadow_backend.service.CropService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
+import lk.ijse.green_shadow_backend.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,9 +40,13 @@ public class CropController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> updateCrop(@PathVariable("cropCode") String cropCode,@RequestBody CropDTO cropDTO) {
         try{
-            cropDTO.setCropCode(cropCode);
-            cropService.updateCrop(cropDTO);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if (Regex.CROP_CODE.validate(cropCode)){
+                cropDTO.setCropCode(cropCode);
+                cropService.updateCrop(cropDTO);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -51,8 +56,12 @@ public class CropController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> deleteCrop(@PathVariable("cropCode") String cropCode) {
         try{
-            cropService.deleteCrop(cropCode);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if (Regex.CROP_CODE.validate(cropCode)){
+                cropService.deleteCrop(cropCode);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -65,10 +74,14 @@ public class CropController {
             @RequestPart("image") MultipartFile image
     ){
         try{
-            byte[] imageBytes = image.getBytes();
-            String cropImageBase64 = AppUtil.convertImageToBase64(imageBytes);
-            cropService.saveImage(cropCode,cropImageBase64);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            if (Regex.CROP_CODE.validate(cropCode)){;
+                byte[] imageBytes = image.getBytes();
+                String cropImageBase64 = AppUtil.convertImageToBase64(imageBytes);
+                cropService.saveImage(cropCode,cropImageBase64);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

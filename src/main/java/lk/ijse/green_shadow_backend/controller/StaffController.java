@@ -2,6 +2,7 @@ package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.StaffDTO;
 import lk.ijse.green_shadow_backend.service.StaffService;
+import lk.ijse.green_shadow_backend.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,8 +38,12 @@ public class StaffController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> updateStaff(@PathVariable("id") String id,@RequestBody StaffDTO staffDTO){
             try{
-                staffService.updateStaff(id,staffDTO);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                if(Regex.STAFF_ID.validate(id)){
+                    staffService.updateStaff(id,staffDTO);
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }else{
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
             }catch (Exception e){
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -48,8 +53,12 @@ public class StaffController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> deleteStaff(@PathVariable("id") String id){
         try{
-            staffService.deleteStaff(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(Regex.STAFF_ID.validate(id)){
+                staffService.deleteStaff(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -62,8 +71,12 @@ public class StaffController {
             @RequestPart("fieldCode") String fieldCode
     ){
         try{
-            staffService.assignFieldToStaff(staffId,fieldCode);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            if (Regex.STAFF_ID.validate(staffId) && Regex.FIELD_CODE.validate(fieldCode)){
+                staffService.assignFieldToStaff(staffId,fieldCode);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -76,8 +89,12 @@ public class StaffController {
             @RequestPart("fieldCode") String fieldCode
     ){
         try{
-            staffService.removeFieldFromStaff(staffId,fieldCode);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(Regex.STAFF_ID.validate(staffId) && Regex.FIELD_CODE.validate(fieldCode)){
+                staffService.removeFieldFromStaff(staffId,fieldCode);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

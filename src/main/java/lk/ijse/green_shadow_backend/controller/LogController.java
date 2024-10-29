@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.controller;
 import lk.ijse.green_shadow_backend.dto.impl.LogDTO;
 import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
+import lk.ijse.green_shadow_backend.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,10 +33,14 @@ public class LogController {
             @RequestPart("observedImage") String observedImage
     ){
         try{
-            byte[] observedImageBytes = observedImage.getBytes();
-            String convertedImageToBase64 = AppUtil.convertImageToBase64(observedImageBytes);
-            logService.uploadObservedImage(logCode,convertedImageToBase64);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            if(Regex.LOG_CODE.validate(logCode)){
+                byte[] observedImageBytes = observedImage.getBytes();
+                String convertedImageToBase64 = AppUtil.convertImageToBase64(observedImageBytes);
+                logService.uploadObservedImage(logCode,convertedImageToBase64);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -49,8 +54,12 @@ public class LogController {
     @DeleteMapping(value = "/{logCode}")
     public ResponseEntity<Void> deleteLog(@RequestParam("logCode") String logCode){
         try{
-            logService.deleteLog(logCode);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(Regex.LOG_CODE.validate(logCode)){
+                logService.deleteLog(logCode);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -59,8 +68,12 @@ public class LogController {
     @PutMapping(value = "/{logCode}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateLog(@PathVariable("logCode") String logCode, @RequestBody LogDTO logDTO){
         try{
-            logService.updateLog(logCode,logDTO);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(Regex.LOG_CODE.validate(logCode)){
+                logService.updateLog(logCode,logDTO);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

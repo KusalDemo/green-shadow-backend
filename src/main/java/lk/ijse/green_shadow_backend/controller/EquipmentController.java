@@ -2,6 +2,7 @@ package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.EquipmentDTO;
 import lk.ijse.green_shadow_backend.service.EquipmentService;
+import lk.ijse.green_shadow_backend.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,8 +38,12 @@ public class EquipmentController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> updateEquipment(@PathVariable("equipmentId") String equipmentId,@RequestBody EquipmentDTO equipmentDTO){
         try{
-            equipmentService.updateEquipment(equipmentId,equipmentDTO);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(Regex.EQUIPMENT_ID.validate(equipmentId)){
+                equipmentService.updateEquipment(equipmentId,equipmentDTO);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -48,8 +53,12 @@ public class EquipmentController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> deleteEquipment(@PathVariable("equipmentId") String equipmentId){
         try{
-            equipmentService.deleteEquipment(equipmentId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(Regex.EQUIPMENT_ID.validate(equipmentId)){
+                equipmentService.deleteEquipment(equipmentId);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

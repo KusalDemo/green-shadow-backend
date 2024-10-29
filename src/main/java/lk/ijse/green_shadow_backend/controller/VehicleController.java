@@ -2,6 +2,7 @@ package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.VehicleDTO;
 import lk.ijse.green_shadow_backend.service.VehicleService;
+import lk.ijse.green_shadow_backend.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,8 +38,12 @@ public class VehicleController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> updateVehicle(@PathVariable("vehicleCode") String vehicleCode, @RequestBody VehicleDTO vehicleDTO) {
         try{
-            vehicleService.updateVehicle(vehicleCode, vehicleDTO);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(Regex.VEHICLE_CODE.validate(vehicleCode)){
+                vehicleService.updateVehicle(vehicleCode, vehicleDTO);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -48,8 +53,12 @@ public class VehicleController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> deleteVehicle(@PathVariable("vehicleCode") String vehicleCode) {
         try{
-            vehicleService.deleteVehicle(vehicleCode);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(Regex.VEHICLE_CODE.validate(vehicleCode)){
+                vehicleService.deleteVehicle(vehicleCode);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
