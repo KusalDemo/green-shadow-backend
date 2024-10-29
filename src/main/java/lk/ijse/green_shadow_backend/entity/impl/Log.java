@@ -1,5 +1,6 @@
 package lk.ijse.green_shadow_backend.entity.impl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lk.ijse.green_shadow_backend.entity.SuperEntity;
 import lombok.AllArgsConstructor;
@@ -22,10 +23,16 @@ public class Log implements SuperEntity {
     private String logDetails;
     @Column(columnDefinition = "LONGTEXT")
     private String observedImage;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "log",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Field> fields;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "log",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Crop> crops;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "log",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Staff> staff;
 }

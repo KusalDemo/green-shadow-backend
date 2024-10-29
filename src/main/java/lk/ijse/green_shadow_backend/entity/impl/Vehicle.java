@@ -25,5 +25,4 @@ public class Vehicle implements SuperEntity {
     @ManyToOne
     @JoinColumn(name = "staffId")
     private Staff staff;
-
 }

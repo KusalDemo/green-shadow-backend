@@ -10,4 +10,7 @@ public interface StaffService {
     void updateStaff(String id, StaffDTO staffDTO);
     void deleteStaff(String id);
     StaffDTO findStaff(String id);
+
+    void assignFieldToStaff(String staffId, String fieldCode);
+    void removeFieldFromStaff(String staffId, String fieldCode);
 }

@@ -1,20 +1,19 @@
 package lk.ijse.green_shadow_backend.entity.impl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lk.ijse.green_shadow_backend.entity.Gender;
 import lk.ijse.green_shadow_backend.entity.Role;
 import lk.ijse.green_shadow_backend.entity.SuperEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
 public class Staff implements SuperEntity {
@@ -36,18 +35,33 @@ public class Staff implements SuperEntity {
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinTable(
             name = "staff_field",
             joinColumns = @JoinColumn(name = "staff_id"),
             inverseJoinColumns = @JoinColumn(name = "field_code")
     )
     private List<Field> fields;
-    @OneToMany(mappedBy = "staff",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "staff",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Vehicle> vehicles;
-    @OneToMany(mappedBy = "staff",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "staff",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Equipment> equipments;
+
     @ManyToOne
     @JoinColumn(name = "logCode")
     private Log log;
+
+    public void addField(Field field){
+        fields.add(field);
+        field.getStaff().add(this);
+    }
+
+    public void removeField(Field field){
+        fields.remove(field);
+        field.getStaff().remove(this);
+    }
 }

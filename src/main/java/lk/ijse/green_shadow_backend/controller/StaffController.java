@@ -50,4 +50,30 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> assignFieldToStaff(
+            @RequestPart("staffId") String staffId,
+            @RequestPart("fieldCode") String fieldCode
+    ){
+        try{
+            staffService.assignFieldToStaff(staffId,fieldCode);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> removeFieldFromStaff(
+            @RequestPart("staffId") String staffId,
+            @RequestPart("fieldCode") String fieldCode
+    ){
+        try{
+            staffService.removeFieldFromStaff(staffId,fieldCode);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

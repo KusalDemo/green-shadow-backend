@@ -27,6 +27,7 @@ public class VehicleServiceImpl implements VehicleService {
     public void saveVehicle(VehicleDTO vehicleDTO) {
         try {
             vehicleDTO.setVehicleCode(AppUtil.generateVehicleCode());
+            System.err.println("Staff: "+vehicleDTO.getStaff());
             vehicleDao.save(mapper.mapToVehicle(vehicleDTO));
         }catch (Exception e){
             System.err.println("Error: "+e.getMessage());

@@ -1,8 +1,11 @@
 package lk.ijse.green_shadow_backend.service.impl;
 
+import lk.ijse.green_shadow_backend.dao.FieldDAO;
 import lk.ijse.green_shadow_backend.dao.StaffDAO;
 import lk.ijse.green_shadow_backend.dto.impl.StaffDTO;
+import lk.ijse.green_shadow_backend.entity.impl.Field;
 import lk.ijse.green_shadow_backend.entity.impl.Staff;
+import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.service.StaffService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
@@ -23,14 +26,18 @@ public class StaffServiceImpl implements StaffService {
     private Mapping mapper;
     @Autowired
     private LogService logService;
+    @Autowired
+    private FieldService fieldService;
+    @Autowired
+    private FieldDAO fieldDao;
 
     @Override
     public void saveStaff(StaffDTO staffDTO) {
-        try{
+        try {
             staffDTO.setId(AppUtil.generateStaffId());
             staffDao.save(mapper.mapToStaff(staffDTO));
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
 
@@ -41,9 +48,9 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public void updateStaff(String id, StaffDTO staffDTO) {
-        try{
+        try {
             Optional<Staff> fetchedStaff = staffDao.findById(id);
-            if(fetchedStaff.isPresent()){
+            if (fetchedStaff.isPresent()) {
                 Staff staff = fetchedStaff.get();
                 staff.setFirstName(staffDTO.getFirstName());
                 staff.setLastName(staffDTO.getLastName());
@@ -62,8 +69,8 @@ public class StaffServiceImpl implements StaffService {
                 staff.setLog(mapper.mapToLog(logService.findLog(staffDTO.getLogCode())));
                 staffDao.save(staff);
             }
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
 
@@ -75,5 +82,31 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public StaffDTO findStaff(String id) {
         return mapper.mapToStaffDTO(staffDao.findById(id).get());
+    }
+
+    @Override
+    public void assignFieldToStaff(String staffId, String fieldCode) {
+        try {
+            Staff fetchedStaff = staffDao.findById(staffId).orElseThrow(() -> new RuntimeException("Staff not found"));
+            Field fetchedField = fieldDao.findById(fieldCode).orElseThrow(() -> new RuntimeException("Field not found"));
+            fetchedStaff.addField(fetchedField);
+            staffDao.save(fetchedStaff);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void removeFieldFromStaff(String staffId, String fieldCode) {
+        try {
+            Staff fetchedStaff = staffDao.findById(staffId).orElseThrow(() -> new RuntimeException("Staff not found"));
+            Field fetchedField = fieldDao.findById(fieldCode).orElseThrow(() -> new RuntimeException("Field not found"));
+            fetchedStaff.removeField(fetchedField);
+            staffDao.save(fetchedStaff);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+        }
     }
 }
