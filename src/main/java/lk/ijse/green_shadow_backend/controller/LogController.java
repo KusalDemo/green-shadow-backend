@@ -19,63 +19,48 @@ public class LogController {
     private LogService logService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveLog(@RequestBody LogDTO logDTO){
-        try{
-            logService.saveLog(logDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Void> saveLog(@RequestBody LogDTO logDTO) {
+        logService.saveLog(logDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadObservedImage(
             @RequestPart("logCode") String logCode,
             @RequestPart("observedImage") String observedImage
-    ){
-        try{
-            if(Regex.LOG_CODE.validate(logCode)){
-                byte[] observedImageBytes = observedImage.getBytes();
-                String convertedImageToBase64 = AppUtil.convertImageToBase64(observedImageBytes);
-                logService.uploadObservedImage(logCode,convertedImageToBase64);
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    ) {
+        if (Regex.LOG_CODE.validate(logCode)) {
+            byte[] observedImageBytes = observedImage.getBytes();
+            String convertedImageToBase64 = AppUtil.convertImageToBase64(observedImageBytes);
+            logService.uploadObservedImage(logCode, convertedImageToBase64);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<LogDTO> getAllLogs(){
+    public List<LogDTO> getAllLogs() {
         return logService.getAllLogs();
     }
 
     @DeleteMapping(value = "/{logCode}")
-    public ResponseEntity<Void> deleteLog(@RequestParam("logCode") String logCode){
-        try{
-            if(Regex.LOG_CODE.validate(logCode)){
-                logService.deleteLog(logCode);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Void> deleteLog(@RequestParam("logCode") String logCode) {
+        if (Regex.LOG_CODE.validate(logCode)) {
+            logService.deleteLog(logCode);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping(value = "/{logCode}",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> updateLog(@PathVariable("logCode") String logCode, @RequestBody LogDTO logDTO){
-        try{
-            if(Regex.LOG_CODE.validate(logCode)){
-                logService.updateLog(logCode,logDTO);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    @PutMapping(value = "/{logCode}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> updateLog(@PathVariable("logCode") String logCode, @RequestBody LogDTO logDTO) {
+        if (Regex.LOG_CODE.validate(logCode)) {
+            logService.updateLog(logCode, logDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

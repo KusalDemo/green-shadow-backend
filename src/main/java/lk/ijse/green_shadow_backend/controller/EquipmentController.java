@@ -21,12 +21,8 @@ public class EquipmentController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO) {
-        try {
-            equipmentService.saveEquipment(equipmentDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        equipmentService.saveEquipment(equipmentDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,31 +32,23 @@ public class EquipmentController {
 
     @PutMapping(value = "/{equipmentId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
-    public ResponseEntity<Void> updateEquipment(@PathVariable("equipmentId") String equipmentId,@RequestBody EquipmentDTO equipmentDTO){
-        try{
-            if(Regex.EQUIPMENT_ID.validate(equipmentId)){
-                equipmentService.updateEquipment(equipmentId,equipmentDTO);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Void> updateEquipment(@PathVariable("equipmentId") String equipmentId, @RequestBody EquipmentDTO equipmentDTO) {
+        if (Regex.EQUIPMENT_ID.validate(equipmentId)) {
+            equipmentService.updateEquipment(equipmentId, equipmentDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping(value = "/{equipmentId}")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
-    public ResponseEntity<Void> deleteEquipment(@PathVariable("equipmentId") String equipmentId){
-        try{
-            if(Regex.EQUIPMENT_ID.validate(equipmentId)){
-                equipmentService.deleteEquipment(equipmentId);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Void> deleteEquipment(@PathVariable("equipmentId") String equipmentId) {
+        if (Regex.EQUIPMENT_ID.validate(equipmentId)) {
+            equipmentService.deleteEquipment(equipmentId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

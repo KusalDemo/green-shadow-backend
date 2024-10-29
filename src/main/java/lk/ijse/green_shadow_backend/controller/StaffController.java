@@ -21,46 +21,34 @@ public class StaffController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO) {
-        try{
-            staffService.saveStaff(staffDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        staffService.saveStaff(staffDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<StaffDTO> getAllStaffs(){
+    public List<StaffDTO> getAllStaffs() {
         return staffService.getAllStaffs();
     }
 
-    @PutMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
-    public ResponseEntity<Void> updateStaff(@PathVariable("id") String id,@RequestBody StaffDTO staffDTO){
-            try{
-                if(Regex.STAFF_ID.validate(id)){
-                    staffService.updateStaff(id,staffDTO);
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                }else{
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                }
-            }catch (Exception e){
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+    public ResponseEntity<Void> updateStaff(@PathVariable("id") String id, @RequestBody StaffDTO staffDTO) {
+        if (Regex.STAFF_ID.validate(id)) {
+            staffService.updateStaff(id, staffDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
-    public ResponseEntity<Void> deleteStaff(@PathVariable("id") String id){
-        try{
-            if(Regex.STAFF_ID.validate(id)){
-                staffService.deleteStaff(id);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Void> deleteStaff(@PathVariable("id") String id) {
+        if (Regex.STAFF_ID.validate(id)) {
+            staffService.deleteStaff(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -69,16 +57,12 @@ public class StaffController {
     public ResponseEntity<Void> assignFieldToStaff(
             @RequestPart("staffId") String staffId,
             @RequestPart("fieldCode") String fieldCode
-    ){
-        try{
-            if (Regex.STAFF_ID.validate(staffId) && Regex.FIELD_CODE.validate(fieldCode)){
-                staffService.assignFieldToStaff(staffId,fieldCode);
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    ) {
+        if (Regex.STAFF_ID.validate(staffId) && Regex.FIELD_CODE.validate(fieldCode)) {
+            staffService.assignFieldToStaff(staffId, fieldCode);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -87,16 +71,12 @@ public class StaffController {
     public ResponseEntity<Void> removeFieldFromStaff(
             @RequestPart("staffId") String staffId,
             @RequestPart("fieldCode") String fieldCode
-    ){
-        try{
-            if(Regex.STAFF_ID.validate(staffId) && Regex.FIELD_CODE.validate(fieldCode)){
-                staffService.removeFieldFromStaff(staffId,fieldCode);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    ) {
+        if (Regex.STAFF_ID.validate(staffId) && Regex.FIELD_CODE.validate(fieldCode)) {
+            staffService.removeFieldFromStaff(staffId, fieldCode);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
