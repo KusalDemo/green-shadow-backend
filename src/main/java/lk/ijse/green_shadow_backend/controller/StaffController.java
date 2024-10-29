@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class StaffController {
     private StaffService staffService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO) {
         try{
             staffService.saveStaff(staffDTO);
@@ -32,6 +34,7 @@ public class StaffController {
     }
 
     @PutMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> updateStaff(@PathVariable("id") String id,@RequestBody StaffDTO staffDTO){
             try{
                 staffService.updateStaff(id,staffDTO);
@@ -42,6 +45,7 @@ public class StaffController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> deleteStaff(@PathVariable("id") String id){
         try{
             staffService.deleteStaff(id);
@@ -52,6 +56,7 @@ public class StaffController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> assignFieldToStaff(
             @RequestPart("staffId") String staffId,
             @RequestPart("fieldCode") String fieldCode
@@ -65,6 +70,7 @@ public class StaffController {
     }
 
     @DeleteMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     public ResponseEntity<Void> removeFieldFromStaff(
             @RequestPart("staffId") String staffId,
             @RequestPart("fieldCode") String fieldCode
