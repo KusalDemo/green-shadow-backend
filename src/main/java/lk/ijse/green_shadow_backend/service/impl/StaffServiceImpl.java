@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.service.impl;
 import lk.ijse.green_shadow_backend.dao.StaffDAO;
 import lk.ijse.green_shadow_backend.dto.impl.StaffDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Staff;
+import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.service.StaffService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
@@ -18,9 +19,10 @@ import java.util.Optional;
 public class StaffServiceImpl implements StaffService {
     @Autowired
     private StaffDAO staffDao;
-
     @Autowired
     private Mapping mapper;
+    @Autowired
+    private LogService logService;
 
     @Override
     public void saveStaff(StaffDTO staffDTO) {
@@ -57,6 +59,7 @@ public class StaffServiceImpl implements StaffService {
                 staff.setEmail(staffDTO.getEmail());
                 staff.setRole(staffDTO.getRole());
                 staff.setDOB(staffDTO.getDOB());
+                staff.setLog(mapper.mapToLog(logService.findLog(staffDTO.getLogCode())));
                 staffDao.save(staff);
             }
         }catch (Exception e){

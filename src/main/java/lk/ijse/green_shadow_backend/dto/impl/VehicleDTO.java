@@ -17,5 +17,5 @@ public class VehicleDTO implements SuperDTO {
     private String fuelType;
     private String status;
     private String remarks;
-    private String allocatedStaffMemberDetails;
+    private String staff;
 }

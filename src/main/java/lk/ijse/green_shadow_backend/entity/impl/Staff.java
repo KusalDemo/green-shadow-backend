@@ -43,7 +43,7 @@ public class Staff implements SuperEntity {
             inverseJoinColumns = @JoinColumn(name = "field_code")
     )
     private List<Field> fields;
-    @OneToMany(mappedBy = "allocatedStaffMemberDetails",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "staff",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Vehicle> vehicles;
     @OneToMany(mappedBy = "staff",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Equipment> equipments;

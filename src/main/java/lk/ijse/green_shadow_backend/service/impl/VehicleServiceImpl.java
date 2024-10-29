@@ -20,6 +20,8 @@ public class VehicleServiceImpl implements VehicleService {
     private VehicleDAO vehicleDao;
     @Autowired
     private Mapping mapper;
+    @Autowired
+    private StaffServiceImpl staffService;
 
     @Override
     public void saveVehicle(VehicleDTO vehicleDTO) {
@@ -47,7 +49,7 @@ public class VehicleServiceImpl implements VehicleService {
                 vehicle.setFuelType(vehicleDTO.getFuelType());
                 vehicle.setStatus(vehicleDTO.getStatus());
                 vehicle.setRemarks(vehicleDTO.getRemarks());
-                //vehicle.setAllocatedStaffMemberDetails(vehicleDTO.getAllocatedStaffMemberDetails());
+                vehicle.setStaff(mapper.mapToStaff(staffService.findStaff(vehicleDTO.getStaff())));
                 vehicleDao.save(vehicle);
             }
         }catch (Exception e){

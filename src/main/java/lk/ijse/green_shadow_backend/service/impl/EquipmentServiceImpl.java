@@ -4,6 +4,7 @@ import lk.ijse.green_shadow_backend.dao.EquipmentDAO;
 import lk.ijse.green_shadow_backend.dto.impl.EquipmentDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Equipment;
 import lk.ijse.green_shadow_backend.service.EquipmentService;
+import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,12 @@ import java.util.Optional;
 public class EquipmentServiceImpl implements EquipmentService {
     @Autowired
     private EquipmentDAO equipmentDao;
-
     @Autowired
     private Mapping mapper;
+    @Autowired
+    private FieldService fieldService;
+    @Autowired
+    private StaffServiceImpl staffService;
 
     @Override
     public void saveEquipment(EquipmentDTO equipmentDTO) {
@@ -44,8 +48,8 @@ public class EquipmentServiceImpl implements EquipmentService {
                 equipment.setName(equipmentDTO.getName());
                 equipment.setType(equipmentDTO.getType());
                 equipment.setStatus(equipmentDTO.getStatus());
-                //equipment.setStaffId(equipmentDTO.getStaffId());
-                //equipment.setFieldCode(equipmentDTO.getFieldCode());
+                equipment.setStaff(mapper.mapToStaff(staffService.findStaff(equipmentDTO.getStaffId())));
+                equipment.setField(mapper.mapToField(fieldService.findField(equipmentDTO.getFieldCode())));
                 equipmentDao.save(equipment);
             }
         }catch (Exception e){

@@ -4,6 +4,7 @@ import lk.ijse.green_shadow_backend.dao.CropDAO;
 import lk.ijse.green_shadow_backend.dto.impl.CropDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Crop;
 import lk.ijse.green_shadow_backend.service.CropService;
+import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class CropServiceImpl implements CropService {
     private CropDAO cropDAO;
     @Autowired
     private Mapping mapper;
+    @Autowired
+    private FieldService fieldService;
 
     @Override
     public void saveCrop(CropDTO cropDTO) {
@@ -45,6 +48,7 @@ public class CropServiceImpl implements CropService {
             crop.setCropScientificName(cropDTO.getCropScientificName());
             crop.setCategory(cropDTO.getCategory());
             crop.setCropSeason(cropDTO.getCropSeason());
+            crop.setField(mapper.mapToField(fieldService.findField(cropDTO.getFieldCode())));
             cropDAO.save(crop);
         }
     }

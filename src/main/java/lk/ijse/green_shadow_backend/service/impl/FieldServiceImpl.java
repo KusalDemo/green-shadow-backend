@@ -4,6 +4,7 @@ import lk.ijse.green_shadow_backend.dao.FieldDAO;
 import lk.ijse.green_shadow_backend.dto.impl.FieldDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Field;
 import lk.ijse.green_shadow_backend.service.FieldService;
+import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class FieldServiceImpl implements FieldService {
     private FieldDAO fieldDao;
     @Autowired
     private Mapping mapper;
+    @Autowired
+    private LogService logService;
 
     @Override
     public void saveField(FieldDTO fieldDTO) {
@@ -45,6 +48,7 @@ public class FieldServiceImpl implements FieldService {
                 field.setFieldName(fieldDTO.getFieldName());
                 field.setFieldLocation(fieldDTO.getFieldLocation());
                 field.setExtentSizeOfField(fieldDTO.getExtentSizeOfField());
+                field.setLog(mapper.mapToLog(logService.findLog(fieldDTO.getLogCode())));
                 fieldDao.save(field);
             }
         }catch (Exception e){
