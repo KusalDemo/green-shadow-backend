@@ -190,7 +190,17 @@ public class Mapping {
 
     public Vehicle mapToVehicle(VehicleDTO vehicleDTO) {return modelMapper.map(vehicleDTO, Vehicle.class);}
     public VehicleDTO mapToVehicleDTO(Vehicle vehicle) {return modelMapper.map(vehicle, VehicleDTO.class);}
-    public List<VehicleDTO> mapToVehicleDTOList(List<Vehicle> vehicleList) {return vehicleList.stream().map(this::mapToVehicleDTO).toList();}
+    public List<VehicleDTO> mapToVehicleDTOList(List<Vehicle> vehicleList) {return vehicleList.stream().map(vehicle -> {
+        VehicleDTO vehicleDTO = new VehicleDTO();
+        vehicleDTO.setVehicleCode(vehicle.getVehicleCode());
+        vehicleDTO.setLicensePlateNumber(vehicle.getLicensePlateNumber());
+        vehicleDTO.setVehicleCategory(vehicle.getVehicleCategory());
+        vehicleDTO.setFuelType(vehicle.getFuelType());
+        vehicleDTO.setStatus(vehicle.getStatus());
+        vehicleDTO.setRemarks(vehicle.getRemarks());
+        vehicleDTO.setStaff(vehicle.getStaff().getId());
+        return vehicleDTO;
+    }).toList();}
     public List<Vehicle> mapToVehicleList(List<VehicleDTO> vehicleDTOList) {return vehicleDTOList.stream().map(this::mapToVehicle).toList();}
 
     public Equipment mapToEquipment(EquipmentDTO equipmentDTO) {return modelMapper.map(equipmentDTO, Equipment.class);}

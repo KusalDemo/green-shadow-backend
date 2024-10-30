@@ -74,4 +74,14 @@ public class VehicleServiceImpl implements VehicleService {
             throw new EntryNotFoundException("Vehicle", vehicleCode);
         }
     }
+
+    @Override
+    public List<VehicleDTO> sortByVehicleCategory(String name) {
+        return mapper.mapToVehicleDTOList(vehicleDao.sortByVehicleCategory(name));
+    }
+
+    @Override
+    public List<VehicleDTO> findByStatus(String status) {
+        return mapper.mapToVehicleDTOList(vehicleDao.findByStatus(status));
+    }
 }

@@ -51,4 +51,14 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value = "/category/{vehicleCategory}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<VehicleDTO> getVehiclesByCategory(@PathVariable("vehicleCategory") String vehicleCategory) {
+        return vehicleService.sortByVehicleCategory(vehicleCategory);
+    }
+
+    @GetMapping(value = "/status/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<VehicleDTO> getVehiclesByStatus(@PathVariable("status") String status) {
+        return vehicleService.findByStatus(status);
+    }
 }
