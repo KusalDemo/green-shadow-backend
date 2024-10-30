@@ -2,6 +2,7 @@ package lk.ijse.green_shadow_backend.service;
 
 import lk.ijse.green_shadow_backend.dto.impl.LogDTO;
 
+import java.util.Date;
 import java.util.List;
 
 public interface LogService {
@@ -11,4 +12,5 @@ public interface LogService {
     void deleteLog(String logCode);
     void updateLog(String logCode,LogDTO logDTO);
     LogDTO findLog(String logCode);
+    List<LogDTO> getLogsBetweenDates(Date date1, Date date2);
 }

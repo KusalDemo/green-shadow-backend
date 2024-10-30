@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.service.impl;
 import lk.ijse.green_shadow_backend.dao.FieldDAO;
 import lk.ijse.green_shadow_backend.dao.StaffDAO;
 import lk.ijse.green_shadow_backend.dto.impl.StaffDTO;
+import lk.ijse.green_shadow_backend.entity.Gender;
 import lk.ijse.green_shadow_backend.entity.impl.Field;
 import lk.ijse.green_shadow_backend.entity.impl.Staff;
 import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
@@ -87,6 +88,22 @@ public class StaffServiceImpl implements StaffService {
             throw new EntryNotFoundException("Staff", id);
         }
     }
+
+    @Override
+    public List<StaffDTO> findByStaffName(String staffName) {
+        return mapper.mapToStaffDTOList(staffDao.findByStaffName(staffName));
+    }
+
+    @Override
+    public List<StaffDTO> findByDesignation(String designation) {
+        return mapper.mapToStaffDTOList(staffDao.findByDesignation(designation));
+    }
+
+    @Override
+    public List<StaffDTO> sortByGender(Gender gender) {
+        return mapper.mapToStaffDTOList(staffDao.sortByGender(gender));
+    }
+
 
     @Override
     public void assignFieldToStaff(String staffId, String fieldCode) {

@@ -1,6 +1,7 @@
 package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.StaffDTO;
+import lk.ijse.green_shadow_backend.entity.Gender;
 import lk.ijse.green_shadow_backend.service.StaffService;
 import lk.ijse.green_shadow_backend.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,19 @@ public class StaffController {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "staffName/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<StaffDTO> getStaffsByName(@PathVariable("name") String name) {
+        return staffService.findByStaffName(name);
+    }
+    @GetMapping(value = "designation/{designation}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<StaffDTO> findByDesignation(@PathVariable("designation") String designation) {
+        return staffService.findByDesignation(designation);
+    }
+    @GetMapping(value = "gender/{gender}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<StaffDTO> sortByGender(@PathVariable("gender") Gender gender) {
+        return staffService.sortByGender(gender);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

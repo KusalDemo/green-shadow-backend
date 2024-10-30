@@ -10,6 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -62,5 +65,11 @@ public class LogController {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/dates", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<LogDTO> getLogsBetweenDates(@RequestParam("start") String date1, @RequestParam("end") String  date2) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return logService.getLogsBetweenDates(formatter.parse(date1), formatter.parse(date2));
     }
 }
