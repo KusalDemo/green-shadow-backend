@@ -5,7 +5,7 @@ import lk.ijse.green_shadow_backend.dao.StaffDAO;
 import lk.ijse.green_shadow_backend.dto.impl.StaffDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Field;
 import lk.ijse.green_shadow_backend.entity.impl.Staff;
-import lk.ijse.green_shadow_backend.service.FieldService;
+import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
 import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.service.StaffService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
@@ -27,18 +27,12 @@ public class StaffServiceImpl implements StaffService {
     @Autowired
     private LogService logService;
     @Autowired
-    private FieldService fieldService;
-    @Autowired
     private FieldDAO fieldDao;
 
     @Override
     public void saveStaff(StaffDTO staffDTO) {
-        try {
-            staffDTO.setId(AppUtil.generateStaffId());
-            staffDao.save(mapper.mapToStaff(staffDTO));
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+        staffDTO.setId(AppUtil.generateStaffId());
+        staffDao.save(mapper.mapToStaff(staffDTO));
     }
 
     @Override
@@ -48,29 +42,27 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public void updateStaff(String id, StaffDTO staffDTO) {
-        try {
-            Optional<Staff> fetchedStaff = staffDao.findById(id);
-            if (fetchedStaff.isPresent()) {
-                Staff staff = fetchedStaff.get();
-                staff.setFirstName(staffDTO.getFirstName());
-                staff.setLastName(staffDTO.getLastName());
-                staff.setDesignation(staffDTO.getDesignation());
-                staff.setGender(staffDTO.getGender());
-                staff.setJoinedDate(staffDTO.getJoinedDate());
-                staff.setAddressLine1(staffDTO.getAddressLine1());
-                staff.setAddressLine2(staffDTO.getAddressLine2());
-                staff.setAddressLine3(staffDTO.getAddressLine3());
-                staff.setAddressLine4(staffDTO.getAddressLine4());
-                staff.setAddressLine5(staffDTO.getAddressLine5());
-                staff.setContactNumber(staffDTO.getContactNumber());
-                staff.setEmail(staffDTO.getEmail());
-                staff.setRole(staffDTO.getRole());
-                staff.setDOB(staffDTO.getDOB());
-                staff.setLog(mapper.mapToLog(logService.findLog(staffDTO.getLogCode())));
-                staffDao.save(staff);
-            }
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+        Optional<Staff> fetchedStaff = staffDao.findById(id);
+        if (fetchedStaff.isPresent()) {
+            Staff staff = fetchedStaff.get();
+            staff.setFirstName(staffDTO.getFirstName());
+            staff.setLastName(staffDTO.getLastName());
+            staff.setDesignation(staffDTO.getDesignation());
+            staff.setGender(staffDTO.getGender());
+            staff.setJoinedDate(staffDTO.getJoinedDate());
+            staff.setAddressLine1(staffDTO.getAddressLine1());
+            staff.setAddressLine2(staffDTO.getAddressLine2());
+            staff.setAddressLine3(staffDTO.getAddressLine3());
+            staff.setAddressLine4(staffDTO.getAddressLine4());
+            staff.setAddressLine5(staffDTO.getAddressLine5());
+            staff.setContactNumber(staffDTO.getContactNumber());
+            staff.setEmail(staffDTO.getEmail());
+            staff.setRole(staffDTO.getRole());
+            staff.setDOB(staffDTO.getDOB());
+            staff.setLog(mapper.mapToLog(logService.findLog(staffDTO.getLogCode())));
+            staffDao.save(staff);
+        } else {
+            throw new EntryNotFoundException("Staff", id);
         }
     }
 
@@ -81,32 +73,28 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public StaffDTO findStaff(String id) {
-        return mapper.mapToStaffDTO(staffDao.findById(id).get());
+        Optional<Staff> fetchedStaff = staffDao.findById(id);
+        if (fetchedStaff.isPresent()) {
+            Staff staff = fetchedStaff.get();
+            return mapper.mapToStaffDTO(staff);
+        } else {
+            throw new EntryNotFoundException("Staff", id);
+        }
     }
 
     @Override
     public void assignFieldToStaff(String staffId, String fieldCode) {
-        try {
-            Staff fetchedStaff = staffDao.findById(staffId).orElseThrow(() -> new RuntimeException("Staff not found"));
-            Field fetchedField = fieldDao.findById(fieldCode).orElseThrow(() -> new RuntimeException("Field not found"));
-            fetchedStaff.addField(fetchedField);
-            staffDao.save(fetchedStaff);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
-        }
+        Staff fetchedStaff = staffDao.findById(staffId).orElseThrow(() -> new EntryNotFoundException("Staff", staffId));
+        Field fetchedField = fieldDao.findById(fieldCode).orElseThrow(() -> new EntryNotFoundException("Field", fieldCode));
+        fetchedStaff.addField(fetchedField);
+        staffDao.save(fetchedStaff);
     }
 
     @Override
     public void removeFieldFromStaff(String staffId, String fieldCode) {
-        try {
-            Staff fetchedStaff = staffDao.findById(staffId).orElseThrow(() -> new RuntimeException("Staff not found"));
-            Field fetchedField = fieldDao.findById(fieldCode).orElseThrow(() -> new RuntimeException("Field not found"));
-            fetchedStaff.removeField(fetchedField);
-            staffDao.save(fetchedStaff);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
-        }
+        Staff fetchedStaff = staffDao.findById(staffId).orElseThrow(() -> new EntryNotFoundException("Staff", staffId));
+        Field fetchedField = fieldDao.findById(fieldCode).orElseThrow(() -> new EntryNotFoundException("Field", fieldCode));
+        fetchedStaff.removeField(fetchedField);
+        staffDao.save(fetchedStaff);
     }
 }

@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.service.impl;
 import lk.ijse.green_shadow_backend.dao.LogDAO;
 import lk.ijse.green_shadow_backend.dto.impl.LogDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Log;
+import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
 import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
@@ -23,25 +24,19 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void saveLog(LogDTO logDto) {
-        try{
-            logDto.setLogCode(AppUtil.generateLogCode());
-            logDao.save(mapper.mapToLog(logDto));
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
+        logDto.setLogCode(AppUtil.generateLogCode());
+        logDao.save(mapper.mapToLog(logDto));
     }
 
     @Override
-    public void uploadObservedImage(String logCode,String observedImage) {
-        try{
-            Optional<Log> fetchedLog = logDao.findById(logCode);
-            if(fetchedLog.isPresent()){
-                Log log = fetchedLog.get();
-                log.setObservedImage(observedImage);
-                logDao.save(log);
-            }
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
+    public void uploadObservedImage(String logCode, String observedImage) {
+        Optional<Log> fetchedLog = logDao.findById(logCode);
+        if (fetchedLog.isPresent()) {
+            Log log = fetchedLog.get();
+            log.setObservedImage(observedImage);
+            logDao.save(log);
+        } else {
+            throw new EntryNotFoundException("Log", logCode);
         }
     }
 
@@ -52,30 +47,30 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void deleteLog(String logCode) {
-        try{
-            logDao.deleteById(logCode);
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
+        logDao.deleteById(logCode);
     }
 
     @Override
     public void updateLog(String logCode, LogDTO logDTO) {
-        try{
-            Optional<Log> fetchedLog = logDao.findById(logCode);
-            if(fetchedLog.isPresent()){
-                Log log = fetchedLog.get();
-                log.setLogDate(logDTO.getLogDate());
-                log.setLogDetails(logDTO.getLogDetails());
-                logDao.save(log);
-            }
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
+        Optional<Log> fetchedLog = logDao.findById(logCode);
+        if (fetchedLog.isPresent()) {
+            Log log = fetchedLog.get();
+            log.setLogDate(logDTO.getLogDate());
+            log.setLogDetails(logDTO.getLogDetails());
+            logDao.save(log);
+        } else {
+            throw new EntryNotFoundException("Log", logCode);
         }
     }
 
     @Override
     public LogDTO findLog(String logCode) {
-        return mapper.mapToLogDTO(logDao.findById(logCode).get());
+        Optional<Log> fetchedLog = logDao.findById(logCode);
+        if (fetchedLog.isPresent()) {
+            Log log = fetchedLog.get();
+            return mapper.mapToLogDTO(log);
+        } else {
+            throw new EntryNotFoundException("Log", logCode);
+        }
     }
 }

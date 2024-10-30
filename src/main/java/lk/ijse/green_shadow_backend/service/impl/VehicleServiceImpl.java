@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.service.impl;
 import lk.ijse.green_shadow_backend.dao.VehicleDAO;
 import lk.ijse.green_shadow_backend.dto.impl.VehicleDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Vehicle;
+import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
 import lk.ijse.green_shadow_backend.service.VehicleService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
@@ -25,13 +26,9 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void saveVehicle(VehicleDTO vehicleDTO) {
-        try {
-            vehicleDTO.setVehicleCode(AppUtil.generateVehicleCode());
-            System.err.println("Staff: "+vehicleDTO.getStaff());
-            vehicleDao.save(mapper.mapToVehicle(vehicleDTO));
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
+        vehicleDTO.setVehicleCode(AppUtil.generateVehicleCode());
+        System.err.println("Staff: " + vehicleDTO.getStaff());
+        vehicleDao.save(mapper.mapToVehicle(vehicleDTO));
     }
 
     @Override
@@ -41,34 +38,33 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void updateVehicle(String vehicleCode, VehicleDTO vehicleDTO) {
-        try{
-            Optional<Vehicle> fetchedVehicle = vehicleDao.findById(vehicleCode);
-            if (fetchedVehicle.isPresent()){
-                Vehicle vehicle = fetchedVehicle.get();
-                vehicle.setLicensePlateNumber(vehicleDTO.getLicensePlateNumber());
-                vehicle.setVehicleCategory(vehicleDTO.getVehicleCategory());
-                vehicle.setFuelType(vehicleDTO.getFuelType());
-                vehicle.setStatus(vehicleDTO.getStatus());
-                vehicle.setRemarks(vehicleDTO.getRemarks());
-                vehicle.setStaff(mapper.mapToStaff(staffService.findStaff(vehicleDTO.getStaff())));
-                vehicleDao.save(vehicle);
-            }
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
+        Optional<Vehicle> fetchedVehicle = vehicleDao.findById(vehicleCode);
+        if (fetchedVehicle.isPresent()) {
+            Vehicle vehicle = fetchedVehicle.get();
+            vehicle.setLicensePlateNumber(vehicleDTO.getLicensePlateNumber());
+            vehicle.setVehicleCategory(vehicleDTO.getVehicleCategory());
+            vehicle.setFuelType(vehicleDTO.getFuelType());
+            vehicle.setStatus(vehicleDTO.getStatus());
+            vehicle.setRemarks(vehicleDTO.getRemarks());
+            vehicle.setStaff(mapper.mapToStaff(staffService.findStaff(vehicleDTO.getStaff())));
+            vehicleDao.save(vehicle);
+        } else {
+            throw new EntryNotFoundException("Vehicle", vehicleCode);
         }
     }
 
     @Override
     public void deleteVehicle(String vehicleCode) {
-        try {
-            vehicleDao.deleteById(vehicleCode);
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
+        vehicleDao.deleteById(vehicleCode);
     }
 
     @Override
     public VehicleDTO findVehicle(String vehicleCode) {
-        return mapper.mapToVehicleDTO(vehicleDao.findById(vehicleCode).get());
+        Optional<Vehicle> fetchedVehicle = vehicleDao.findById(vehicleCode);
+        if (fetchedVehicle.isPresent()) {
+            return mapper.mapToVehicleDTO(fetchedVehicle.get());
+        } else {
+            throw new EntryNotFoundException("Vehicle", vehicleCode);
+        }
     }
 }

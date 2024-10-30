@@ -18,7 +18,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> register(@RequestBody UserDTO userDTO) throws InvalidRoleInfoException {
+    public ResponseEntity<Void> register(@RequestBody UserDTO userDTO){
         userService.register(userDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

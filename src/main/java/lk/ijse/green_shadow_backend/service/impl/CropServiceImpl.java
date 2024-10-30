@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.service.impl;
 import lk.ijse.green_shadow_backend.dao.CropDAO;
 import lk.ijse.green_shadow_backend.dto.impl.CropDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Crop;
+import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
 import lk.ijse.green_shadow_backend.service.CropService;
 import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
@@ -26,12 +27,8 @@ public class CropServiceImpl implements CropService {
 
     @Override
     public void saveCrop(CropDTO cropDTO) {
-        try{
             cropDTO.setCropCode(AppUtil.generateCropCode());
             cropDAO.save(mapper.mapToCrop(cropDTO));
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
     }
 
     @Override
@@ -50,6 +47,8 @@ public class CropServiceImpl implements CropService {
             crop.setCropSeason(cropDTO.getCropSeason());
             crop.setField(mapper.mapToField(fieldService.findField(cropDTO.getFieldCode())));
             cropDAO.save(crop);
+        }else{
+            throw new EntryNotFoundException("Crop",cropDTO.getCropCode());
         }
     }
 
@@ -60,7 +59,12 @@ public class CropServiceImpl implements CropService {
 
     @Override
     public CropDTO findCrop(String cropCode) {
-        return mapper.mapToCropDTO(cropDAO.findById(cropCode).get());
+        Optional<Crop> fetchedCrop = cropDAO.findById(cropCode);
+        if (fetchedCrop.isPresent()) {
+            Crop crop = fetchedCrop.get();
+            return mapper.mapToCropDTO(crop);
+        }
+        throw new EntryNotFoundException("Crop", cropCode);
     }
 
     @Override
@@ -70,6 +74,8 @@ public class CropServiceImpl implements CropService {
             Crop crop = fetchedCrop.get();
             crop.setCropImage(image);
             cropDAO.save(crop);
+        }else{
+            throw new EntryNotFoundException("Crop",cropCode);
         }
     }
 }

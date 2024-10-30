@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.service.impl;
 import lk.ijse.green_shadow_backend.dao.FieldDAO;
 import lk.ijse.green_shadow_backend.dto.impl.FieldDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Field;
+import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
 import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
@@ -26,12 +27,8 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public void saveField(FieldDTO fieldDTO) {
-        try{
-            fieldDTO.setFieldCode(AppUtil.generateFieldCode());
-            fieldDao.save(mapper.mapToField(fieldDTO));
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
+        fieldDTO.setFieldCode(AppUtil.generateFieldCode());
+        fieldDao.save(mapper.mapToField(fieldDTO));
     }
 
     @Override
@@ -41,18 +38,16 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public void updateField(String fieldCode, FieldDTO fieldDTO) {
-        try{
-            Optional<Field> fetchedField = fieldDao.findById(fieldCode);
-            if (fetchedField.isPresent()){
-                Field field = fetchedField.get();
-                field.setFieldName(fieldDTO.getFieldName());
-                field.setFieldLocation(fieldDTO.getFieldLocation());
-                field.setExtentSizeOfField(fieldDTO.getExtentSizeOfField());
-                field.setLog(mapper.mapToLog(logService.findLog(fieldDTO.getLogCode())));
-                fieldDao.save(field);
-            }
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
+        Optional<Field> fetchedField = fieldDao.findById(fieldCode);
+        if (fetchedField.isPresent()) {
+            Field field = fetchedField.get();
+            field.setFieldName(fieldDTO.getFieldName());
+            field.setFieldLocation(fieldDTO.getFieldLocation());
+            field.setExtentSizeOfField(fieldDTO.getExtentSizeOfField());
+            field.setLog(mapper.mapToLog(logService.findLog(fieldDTO.getLogCode())));
+            fieldDao.save(field);
+        } else {
+            throw new EntryNotFoundException("Field", fieldCode);
         }
     }
 
@@ -63,21 +58,32 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public void uploadFieldImage(String fieldCode, String image1, String image2) {
-        try{
             Optional<Field> fetchedField = fieldDao.findById(fieldCode);
-            if (fetchedField.isPresent()){
+            if (fetchedField.isPresent()) {
                 Field field = fetchedField.get();
-                if (image1 == null) {field.setImage1(field.getImage1());} else {field.setImage1(image1);}
-                if (image2 == null) {field.setImage2(field.getImage2());} else {field.setImage2(image2);}
+                if (image1 == null) {
+                    field.setImage1(field.getImage1());
+                } else {
+                    field.setImage1(image1);
+                }
+                if (image2 == null) {
+                    field.setImage2(field.getImage2());
+                } else {
+                    field.setImage2(image2);
+                }
                 fieldDao.save(field);
+            }else {
+                throw new EntryNotFoundException("Field", fieldCode);
             }
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
     }
 
     @Override
     public FieldDTO findField(String fieldCode) {
-        return mapper.mapToFieldDTO(fieldDao.findById(fieldCode).get());
+        Optional<Field> fetchedField = fieldDao.findById(fieldCode);
+        if (fetchedField.isPresent()) {
+            Field field = fetchedField.get();
+            return mapper.mapToFieldDTO(field);
+        }
+        throw new EntryNotFoundException("Field", fieldCode);
     }
 }

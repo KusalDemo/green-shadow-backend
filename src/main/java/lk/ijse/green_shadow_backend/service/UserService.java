@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import javax.management.relation.InvalidRoleInfoException;
 
 public interface UserService {
-    User register(UserDTO userDTO) throws InvalidRoleInfoException;
+    void register(UserDTO userDTO);
     JWTAuthResponse login(UserDTO userDTO);
     JWTAuthResponse refresh(String accessToken);
 }

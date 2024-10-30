@@ -4,6 +4,7 @@ import lk.ijse.green_shadow_backend.dao.UserDAO;
 import lk.ijse.green_shadow_backend.dto.impl.UserDTO;
 import lk.ijse.green_shadow_backend.entity.Role;
 import lk.ijse.green_shadow_backend.entity.impl.User;
+import lk.ijse.green_shadow_backend.exception.InvalidUserRoleException;
 import lk.ijse.green_shadow_backend.secure.JWTAuthResponse;
 import lk.ijse.green_shadow_backend.service.UserService;
 import lk.ijse.green_shadow_backend.util.Mapping;
@@ -42,16 +43,17 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder encoder= new BCryptPasswordEncoder(12);
 
     @Override
-    public User register(UserDTO userDTO) throws InvalidRoleInfoException {
+    public void register(UserDTO userDTO){
         Role role = userDTO.getRole();
         String roleCode = userDTO.getRoleClarificationCode();
         if ((role == Role.ADMINISTRATIVE && roleCode.equals(adminClarificationCode))||
                 (role == Role.MANAGER && roleCode.equals(managerClarificationCode))||
                 (role == Role.SCIENTIST && roleCode.equals(scientistClarificationCode))){
             userDTO.setPassword(encoder.encode(userDTO.getPassword()));
-            return userDao.save(mapper.mapToUser(userDTO));
+            userDao.save(mapper.mapToUser(userDTO));
+        }else{
+            throw new InvalidUserRoleException("Invalid role or clarification code.");
         }
-        throw new InvalidRoleInfoException("Invalid role or clarification code.");
     }
 
     @Override

@@ -1,5 +1,7 @@
 package lk.ijse.green_shadow_backend.advisor;
 
+import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
+import lk.ijse.green_shadow_backend.exception.InvalidUserRoleException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,7 +31,7 @@ public class AppWideExceptionHandler {
 
     @ExceptionHandler(InvalidRoleInfoException.class)
     public ResponseEntity<String> handleInvalidRoleInfoException(InvalidRoleInfoException e){
-        return new ResponseEntity<>("Invalid Role Info Exception occurred: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Invalid Role Info Exception occurred: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
@@ -37,5 +39,14 @@ public class AppWideExceptionHandler {
         return new ResponseEntity<>("Username Not Found: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(EntryNotFoundException.class)
+    public ResponseEntity<String> handleEntryNotFoundException(EntryNotFoundException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidUserRoleException.class)
+    public ResponseEntity<String> handleInvalidUserRoleException(InvalidUserRoleException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
 
 }

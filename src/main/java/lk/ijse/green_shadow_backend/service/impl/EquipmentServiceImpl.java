@@ -3,6 +3,7 @@ package lk.ijse.green_shadow_backend.service.impl;
 import lk.ijse.green_shadow_backend.dao.EquipmentDAO;
 import lk.ijse.green_shadow_backend.dto.impl.EquipmentDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Equipment;
+import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
 import lk.ijse.green_shadow_backend.service.EquipmentService;
 import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
@@ -26,12 +27,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public void saveEquipment(EquipmentDTO equipmentDTO) {
-        try{
-            equipmentDTO.setEquipmentId(AppUtil.generateEquipmentId());
-            equipmentDao.save(mapper.mapToEquipment(equipmentDTO));
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
+        equipmentDTO.setEquipmentId(AppUtil.generateEquipmentId());
+        equipmentDao.save(mapper.mapToEquipment(equipmentDTO));
     }
 
     @Override
@@ -41,35 +38,27 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public void updateEquipment(String equipmentId, EquipmentDTO equipmentDTO) {
-        try {
-            Optional<Equipment> fetchedEquipment = equipmentDao.findById(equipmentId);
-            if (fetchedEquipment.isPresent()) {
-                Equipment equipment = fetchedEquipment.get();
-                equipment.setName(equipmentDTO.getName());
-                equipment.setType(equipmentDTO.getType());
-                equipment.setStatus(equipmentDTO.getStatus());
-                equipment.setStaff(mapper.mapToStaff(staffService.findStaff(equipmentDTO.getStaffId())));
-                equipment.setField(mapper.mapToField(fieldService.findField(equipmentDTO.getFieldCode())));
-                equipmentDao.save(equipment);
-            }
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
+        Optional<Equipment> fetchedEquipment = equipmentDao.findById(equipmentId);
+        if (fetchedEquipment.isPresent()) {
+            Equipment equipment = fetchedEquipment.get();
+            equipment.setName(equipmentDTO.getName());
+            equipment.setType(equipmentDTO.getType());
+            equipment.setStatus(equipmentDTO.getStatus());
+            equipment.setStaff(mapper.mapToStaff(staffService.findStaff(equipmentDTO.getStaffId())));
+            equipment.setField(mapper.mapToField(fieldService.findField(equipmentDTO.getFieldCode())));
+            equipmentDao.save(equipment);
+        } else {
+            throw new EntryNotFoundException("Equipment", equipmentId);
         }
     }
 
     @Override
     public void deleteEquipment(String equipmentId) {
-        try{
-            equipmentDao.deleteById(equipmentId);
-        }catch (Exception e){
-            System.err.println("Error: "+e.getMessage());
-        }
+        equipmentDao.deleteById(equipmentId);
     }
 
     @Override
     public EquipmentDTO findEquipment(String equipmentId) {
         return mapper.mapToEquipmentDTO(equipmentDao.findById(equipmentId).get());
     }
-
-
 }
