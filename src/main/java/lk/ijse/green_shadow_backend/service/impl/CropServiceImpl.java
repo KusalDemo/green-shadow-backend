@@ -8,6 +8,7 @@ import lk.ijse.green_shadow_backend.service.CropService;
 import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@Slf4j
 public class CropServiceImpl implements CropService {
     @Autowired
     private CropDAO cropDAO;
@@ -29,6 +31,7 @@ public class CropServiceImpl implements CropService {
     public void saveCrop(CropDTO cropDTO) {
             cropDTO.setCropCode(AppUtil.generateCropCode());
             cropDAO.save(mapper.mapToCrop(cropDTO));
+            log.info("Crop saved successfully with code: {}", cropDTO.getCropCode());
     }
 
     @Override
@@ -47,6 +50,7 @@ public class CropServiceImpl implements CropService {
             crop.setCropSeason(cropDTO.getCropSeason());
             crop.setField(mapper.mapToField(fieldService.findField(cropDTO.getFieldCode())));
             cropDAO.save(crop);
+            log.info("Crop updated successfully with code: {}", cropDTO.getCropCode());
         }else{
             throw new EntryNotFoundException("Crop",cropDTO.getCropCode());
         }
@@ -55,6 +59,7 @@ public class CropServiceImpl implements CropService {
     @Override
     public void deleteCrop(String cropCode) {
         cropDAO.deleteById(cropCode);
+        log.warn("Crop deleted successfully with code: {}", cropCode);
     }
 
     @Override
@@ -62,6 +67,7 @@ public class CropServiceImpl implements CropService {
         Optional<Crop> fetchedCrop = cropDAO.findById(cropCode);
         if (fetchedCrop.isPresent()) {
             Crop crop = fetchedCrop.get();
+            log.info("Crop found successfully with code: {}", cropCode);
             return mapper.mapToCropDTO(crop);
         }
         throw new EntryNotFoundException("Crop", cropCode);
@@ -74,6 +80,7 @@ public class CropServiceImpl implements CropService {
             Crop crop = fetchedCrop.get();
             crop.setCropImage(image);
             cropDAO.save(crop);
+            log.info("Crop image saved successfully with code: {}", cropCode);
         }else{
             throw new EntryNotFoundException("Crop",cropCode);
         }

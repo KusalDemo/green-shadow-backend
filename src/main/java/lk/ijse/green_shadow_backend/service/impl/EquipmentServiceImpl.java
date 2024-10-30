@@ -8,6 +8,7 @@ import lk.ijse.green_shadow_backend.service.EquipmentService;
 import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class EquipmentServiceImpl implements EquipmentService {
     @Autowired
     private EquipmentDAO equipmentDao;
@@ -29,6 +31,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     public void saveEquipment(EquipmentDTO equipmentDTO) {
         equipmentDTO.setEquipmentId(AppUtil.generateEquipmentId());
         equipmentDao.save(mapper.mapToEquipment(equipmentDTO));
+        log.info("Equipment saved successfully with Id: {}", equipmentDTO.getEquipmentId());
     }
 
     @Override
@@ -47,6 +50,7 @@ public class EquipmentServiceImpl implements EquipmentService {
             equipment.setStaff(mapper.mapToStaff(staffService.findStaff(equipmentDTO.getStaffId())));
             equipment.setField(mapper.mapToField(fieldService.findField(equipmentDTO.getFieldCode())));
             equipmentDao.save(equipment);
+            log.info("Equipment updated successfully with Id: {}", equipmentDTO.getEquipmentId());
         } else {
             throw new EntryNotFoundException("Equipment", equipmentId);
         }
@@ -55,6 +59,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public void deleteEquipment(String equipmentId) {
         equipmentDao.deleteById(equipmentId);
+        log.warn("Equipment deleted successfully with Id: {}", equipmentId);
     }
 
     @Override

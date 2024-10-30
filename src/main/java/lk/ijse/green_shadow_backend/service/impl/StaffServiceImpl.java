@@ -10,6 +10,7 @@ import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.service.StaffService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@Slf4j
 public class StaffServiceImpl implements StaffService {
     @Autowired
     private StaffDAO staffDao;
@@ -33,6 +35,7 @@ public class StaffServiceImpl implements StaffService {
     public void saveStaff(StaffDTO staffDTO) {
         staffDTO.setId(AppUtil.generateStaffId());
         staffDao.save(mapper.mapToStaff(staffDTO));
+        log.info("Staff saved successfully with id: {}", staffDTO.getId());
     }
 
     @Override
@@ -61,6 +64,7 @@ public class StaffServiceImpl implements StaffService {
             staff.setDOB(staffDTO.getDOB());
             staff.setLog(mapper.mapToLog(logService.findLog(staffDTO.getLogCode())));
             staffDao.save(staff);
+            log.info("Staff updated successfully with id: {}", id);
         } else {
             throw new EntryNotFoundException("Staff", id);
         }
@@ -69,6 +73,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public void deleteStaff(String id) {
         staffDao.deleteById(id);
+        log.warn("Staff deleted successfully with id: {}", id);
     }
 
     @Override
@@ -76,6 +81,7 @@ public class StaffServiceImpl implements StaffService {
         Optional<Staff> fetchedStaff = staffDao.findById(id);
         if (fetchedStaff.isPresent()) {
             Staff staff = fetchedStaff.get();
+            log.info("Staff found successfully with id: {}", id);
             return mapper.mapToStaffDTO(staff);
         } else {
             throw new EntryNotFoundException("Staff", id);
@@ -88,6 +94,7 @@ public class StaffServiceImpl implements StaffService {
         Field fetchedField = fieldDao.findById(fieldCode).orElseThrow(() -> new EntryNotFoundException("Field", fieldCode));
         fetchedStaff.addField(fetchedField);
         staffDao.save(fetchedStaff);
+        log.info("Field assigned to staff successfully with id: {} and field code: {}", staffId, fieldCode);
     }
 
     @Override
@@ -96,5 +103,6 @@ public class StaffServiceImpl implements StaffService {
         Field fetchedField = fieldDao.findById(fieldCode).orElseThrow(() -> new EntryNotFoundException("Field", fieldCode));
         fetchedStaff.removeField(fetchedField);
         staffDao.save(fetchedStaff);
+        log.warn("Field removed from staff successfully with id: {} and field code: {}", staffId, fieldCode);
     }
 }

@@ -8,6 +8,7 @@ import lk.ijse.green_shadow_backend.service.FieldService;
 import lk.ijse.green_shadow_backend.service.LogService;
 import lk.ijse.green_shadow_backend.util.AppUtil;
 import lk.ijse.green_shadow_backend.util.Mapping;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@Slf4j
 public class FieldServiceImpl implements FieldService {
     @Autowired
     private FieldDAO fieldDao;
@@ -29,6 +31,7 @@ public class FieldServiceImpl implements FieldService {
     public void saveField(FieldDTO fieldDTO) {
         fieldDTO.setFieldCode(AppUtil.generateFieldCode());
         fieldDao.save(mapper.mapToField(fieldDTO));
+        log.info("Field saved successfully with code: {}", fieldDTO.getFieldCode());
     }
 
     @Override
@@ -46,6 +49,7 @@ public class FieldServiceImpl implements FieldService {
             field.setExtentSizeOfField(fieldDTO.getExtentSizeOfField());
             field.setLog(mapper.mapToLog(logService.findLog(fieldDTO.getLogCode())));
             fieldDao.save(field);
+            log.info("Field updated successfully with code: {}", fieldDTO.getFieldCode());
         } else {
             throw new EntryNotFoundException("Field", fieldCode);
         }
@@ -54,6 +58,7 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public void deleteField(String fieldCode) {
         fieldDao.deleteById(fieldCode);
+        log.warn("Field deleted successfully with code: {}", fieldCode);
     }
 
     @Override
@@ -72,6 +77,7 @@ public class FieldServiceImpl implements FieldService {
                     field.setImage2(image2);
                 }
                 fieldDao.save(field);
+                log.info("Field image uploaded successfully with code: {}", fieldCode);
             }else {
                 throw new EntryNotFoundException("Field", fieldCode);
             }

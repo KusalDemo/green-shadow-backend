@@ -8,6 +8,7 @@ import lk.ijse.green_shadow_backend.exception.InvalidUserRoleException;
 import lk.ijse.green_shadow_backend.secure.JWTAuthResponse;
 import lk.ijse.green_shadow_backend.service.UserService;
 import lk.ijse.green_shadow_backend.util.Mapping;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import javax.management.relation.InvalidRoleInfoException;
 
 @Service
 @Transactional
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDao;
@@ -51,6 +53,7 @@ public class UserServiceImpl implements UserService {
                 (role == Role.SCIENTIST && roleCode.equals(scientistClarificationCode))){
             userDTO.setPassword(encoder.encode(userDTO.getPassword()));
             userDao.save(mapper.mapToUser(userDTO));
+            log.info("User: {} registered successfully with role: {}", userDTO.getEmail(), role);
         }else{
             throw new InvalidUserRoleException("Invalid role or clarification code.");
         }
@@ -64,6 +67,7 @@ public class UserServiceImpl implements UserService {
                         userDTO.getPassword())
         );
         if (auth.isAuthenticated()) {
+            log.info("User: {} logged in successfully", userDTO.getEmail());
             return JWTAuthResponse.builder()
                     .token(jwtService.generateToken(userDTO.getEmail()))
                     .build();
@@ -78,6 +82,7 @@ public class UserServiceImpl implements UserService {
         if (fetchedUser == null) {
             throw new UsernameNotFoundException("User not found");
         }
+        log.info("Token refreshed for user: {}", userEmail);
         return JWTAuthResponse.builder()
                 .token(jwtService.generateToken(userEmail))
                 .build();
