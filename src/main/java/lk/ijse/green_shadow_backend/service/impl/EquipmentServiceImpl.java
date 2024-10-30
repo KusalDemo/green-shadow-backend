@@ -2,6 +2,7 @@ package lk.ijse.green_shadow_backend.service.impl;
 
 import lk.ijse.green_shadow_backend.dao.EquipmentDAO;
 import lk.ijse.green_shadow_backend.dto.impl.EquipmentDTO;
+import lk.ijse.green_shadow_backend.entity.EquipmentStatus;
 import lk.ijse.green_shadow_backend.entity.impl.Equipment;
 import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
 import lk.ijse.green_shadow_backend.service.EquipmentService;
@@ -65,5 +66,15 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public EquipmentDTO findEquipment(String equipmentId) {
         return mapper.mapToEquipmentDTO(equipmentDao.findById(equipmentId).get());
+    }
+
+    @Override
+    public List<EquipmentDTO> getEquipmentByName(String name) {
+        return (mapper.mapToEquipmentDTOList(equipmentDao.findByName(name)));
+    }
+
+    @Override
+    public List<EquipmentDTO> getEquipmentByStatus(EquipmentStatus status) {
+        return (mapper.mapToEquipmentDTOList(equipmentDao.findByStatus(status)));
     }
 }

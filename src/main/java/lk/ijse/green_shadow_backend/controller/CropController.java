@@ -71,4 +71,9 @@ public class CropController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value = "/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CropDTO> getCropsByName(@PathVariable("name") String name) {
+        return cropService.getCropsByName(name);
+    }
 }

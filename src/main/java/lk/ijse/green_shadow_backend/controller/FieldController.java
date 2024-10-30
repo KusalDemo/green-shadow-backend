@@ -71,4 +71,9 @@ public class FieldController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value = "/{extentSize}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<FieldDTO> getFieldsByExtentSizeOfField(@PathVariable("extentSize") Double extentSize) {
+        return fieldService.getFieldsByExtentSizeOfField(extentSize);
+    }
 }

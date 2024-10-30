@@ -92,4 +92,9 @@ public class FieldServiceImpl implements FieldService {
         }
         throw new EntryNotFoundException("Field", fieldCode);
     }
+
+    @Override
+    public List<FieldDTO> getFieldsByExtentSizeOfField(Double name) {
+        return mapper.mapToFieldDTOList(fieldDao.findByExtentSizeOfField(name));
+    }
 }

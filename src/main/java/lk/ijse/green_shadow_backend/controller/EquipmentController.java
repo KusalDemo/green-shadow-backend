@@ -1,6 +1,7 @@
 package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.EquipmentDTO;
+import lk.ijse.green_shadow_backend.entity.EquipmentStatus;
 import lk.ijse.green_shadow_backend.service.EquipmentService;
 import lk.ijse.green_shadow_backend.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,15 @@ public class EquipmentController {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<EquipmentDTO> getEquipmentByName(@PathVariable("name") String name) {
+        return equipmentService.getEquipmentByName(name);
+    }
+
+    @GetMapping(value = "/status/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<EquipmentDTO> getEquipmentByStatus(@PathVariable("status") EquipmentStatus status) {
+        return equipmentService.getEquipmentByStatus(status);
     }
 }

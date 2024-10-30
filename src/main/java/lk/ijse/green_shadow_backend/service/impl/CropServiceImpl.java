@@ -85,4 +85,9 @@ public class CropServiceImpl implements CropService {
             throw new EntryNotFoundException("Crop",cropCode);
         }
     }
+
+    @Override
+    public List<CropDTO> getCropsByName(String name){
+        return mapper.mapToCropDTOList(cropDAO.findByName(name));
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.management.relation.InvalidRoleInfoException;
 import java.io.IOException;
@@ -56,5 +57,10 @@ public class AppWideExceptionHandler {
     public ResponseEntity<String> handleInvalidUserRoleException(InvalidUserRoleException e){
         log.error("Invalid User Role: {}", e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleEnumConversionError(MethodArgumentTypeMismatchException ex) {
+        return ResponseEntity.badRequest().body("Invalid ENUM value: " + ex.getValue());
     }
 }

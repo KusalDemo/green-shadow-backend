@@ -13,4 +13,5 @@ public interface FieldService {
     void deleteField(String fieldCode);
     void uploadFieldImage(String fieldCode, String image1, String image2);
     FieldDTO findField(String fieldCode);
+    List<FieldDTO> getFieldsByExtentSizeOfField(Double name);
 }
