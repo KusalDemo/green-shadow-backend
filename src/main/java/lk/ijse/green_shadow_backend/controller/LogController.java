@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -17,17 +18,20 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/log")
+@CrossOrigin
 public class LogController {
     @Autowired
     private LogService logService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> saveLog(@RequestBody LogDTO logDTO) {
         logService.saveLog(logDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> uploadObservedImage(
             @RequestPart("logCode") String logCode,
             @RequestPart("observedImage") String observedImage
@@ -43,11 +47,13 @@ public class LogController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public List<LogDTO> getAllLogs() {
         return logService.getAllLogs();
     }
 
     @DeleteMapping(value = "/{logCode}")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> deleteLog(@RequestParam("logCode") String logCode) {
         if (Regex.LOG_CODE.validate(logCode)) {
             logService.deleteLog(logCode);
@@ -58,6 +64,7 @@ public class LogController {
     }
 
     @PutMapping(value = "/{logCode}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> updateLog(@PathVariable("logCode") String logCode, @RequestBody LogDTO logDTO) {
         if (Regex.LOG_CODE.validate(logCode)) {
             logService.updateLog(logCode, logDTO);
@@ -68,6 +75,7 @@ public class LogController {
     }
 
     @GetMapping(value = "/dates", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public List<LogDTO> getLogsBetweenDates(@RequestParam("start") String date1, @RequestParam("end") String  date2) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return logService.getLogsBetweenDates(formatter.parse(date1), formatter.parse(date2));
