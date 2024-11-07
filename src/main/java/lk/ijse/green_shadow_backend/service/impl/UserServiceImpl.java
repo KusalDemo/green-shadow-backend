@@ -87,4 +87,35 @@ public class UserServiceImpl implements UserService {
                 .token(jwtService.generateToken(userEmail))
                 .build();
     }
+
+    @Override
+    public void update(UserDTO userDTO){
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userDTO.getEmail(),
+                        userDTO.getPassword())
+        );
+        if (auth.isAuthenticated()) {
+            User fetchedUser = userDao.findByEmail(userDTO.getEmail());
+            if (fetchedUser == null) {
+                throw new UsernameNotFoundException("User not found");
+            }
+            fetchedUser.setPassword(encoder.encode(userDTO.getPassword()));
+            userDao.save(fetchedUser);
+        }
+    }
+
+    @Override
+    public void delete(UserDTO userDTO) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userDTO.getEmail(),
+                        userDTO.getPassword())
+        );
+        if (auth.isAuthenticated()) {
+            userDao.deleteById(userDTO.getEmail());
+        }
+    }
+
+
 }

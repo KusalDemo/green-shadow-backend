@@ -24,7 +24,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JWTAuthResponse> login(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.login(userDTO));
     }
@@ -32,5 +32,16 @@ public class UserController {
     @PostMapping(value = "/refresh")
     public ResponseEntity<JWTAuthResponse> refresh(@RequestParam String accessToken) {
         return ResponseEntity.ok(userService.refresh(accessToken));
+    }
+
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> update(@RequestBody UserDTO userDTO) {
+        userService.update(userDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> delete(@RequestBody UserDTO userDTO) {
+        userService.delete(userDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
