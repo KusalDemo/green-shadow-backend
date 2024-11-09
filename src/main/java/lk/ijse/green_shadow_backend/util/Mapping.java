@@ -42,7 +42,7 @@ public class Mapping {
                             .category(crop.getCategory())
                             .cropSeason(crop.getCropSeason())
                             .fieldCode(crop.getField().getFieldCode())
-                            .logCode(crop.getLog().getLogCode())
+                            //.logCode(crop.getLog().getLogCode())
                             .build()).toList()
             );
             fieldDTO.setStaff(
@@ -114,7 +114,7 @@ public class Mapping {
                                     .category(crop.getCategory())
                                     .cropSeason(crop.getCropSeason())
                                     .fieldCode(crop.getField().getFieldCode())
-                                    .logCode(crop.getLog().getLogCode())
+                                    //.logCode(crop.getLog().getLogCode())
                                     .build()).toList())
                             .build()).toList()
             );
@@ -163,7 +163,7 @@ public class Mapping {
                             .category(crop.getCategory())
                             .cropSeason(crop.getCropSeason())
                             .fieldCode(crop.getField().getFieldCode())
-                            .logCode(crop.getLog().getLogCode())
+                            //.logCode(crop.getLog().getLogCode())
                             .build()).toList()
             );
             logDTO.setStaff(

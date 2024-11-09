@@ -13,4 +13,8 @@ public interface LogService {
     void updateLog(String logCode,LogDTO logDTO);
     LogDTO findLog(String logCode);
     List<LogDTO> getLogsBetweenDates(Date date1, Date date2);
+
+    void createLogForCrop(String cropCode, String logCode);
+
+    void deleteLogForCrop(String cropCode, String logCode);
 }

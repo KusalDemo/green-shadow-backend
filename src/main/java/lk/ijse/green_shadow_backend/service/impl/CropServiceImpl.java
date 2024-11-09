@@ -1,8 +1,10 @@
 package lk.ijse.green_shadow_backend.service.impl;
 
 import lk.ijse.green_shadow_backend.dao.CropDAO;
+import lk.ijse.green_shadow_backend.dao.LogDAO;
 import lk.ijse.green_shadow_backend.dto.impl.CropDTO;
 import lk.ijse.green_shadow_backend.entity.impl.Crop;
+import lk.ijse.green_shadow_backend.entity.impl.Log;
 import lk.ijse.green_shadow_backend.exception.EntryNotFoundException;
 import lk.ijse.green_shadow_backend.service.CropService;
 import lk.ijse.green_shadow_backend.service.FieldService;
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class CropServiceImpl implements CropService {
     @Autowired
     private CropDAO cropDAO;
+    @Autowired
+    private LogDAO logDAO;
     @Autowired
     private Mapping mapper;
     @Autowired
@@ -89,5 +93,23 @@ public class CropServiceImpl implements CropService {
     @Override
     public List<CropDTO> getCropsByName(String name){
         return mapper.mapToCropDTOList(cropDAO.findByName(name));
+    }
+
+    @Override
+    public void createLogForCrop(String cropCode,String logCode) {
+        Crop fetchedCrop = cropDAO.findById(cropCode).orElseThrow(() -> new EntryNotFoundException("Crop", cropCode));
+        Log fetchedLog = logDAO.findById(logCode).orElseThrow(() -> new EntryNotFoundException("Log", logCode));
+        fetchedCrop.addLog(fetchedLog);
+        cropDAO.save(fetchedCrop);
+        log.info("Crop log created successfully with code: {}", cropCode);
+    }
+
+    @Override
+    public void deleteLogForCrop(String cropCode, String logCode) {
+        Crop fetchedCrop = cropDAO.findById(cropCode).orElseThrow(() -> new EntryNotFoundException("Crop", cropCode));
+        Log fetchedLog = logDAO.findById(logCode).orElseThrow(() -> new EntryNotFoundException("Log", logCode));
+        fetchedCrop.removeLog(fetchedLog);
+        cropDAO.save(fetchedCrop);
+        log.warn("Crop log deleted successfully with code: {}", cropCode);
     }
 }

@@ -77,4 +77,24 @@ public class CropController {
     public List<CropDTO> getCropsByName(@PathVariable("name") String name) {
         return cropService.getCropsByName(name);
     }
+
+    @PostMapping(value = "/log", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
+    public ResponseEntity<Void> createLogForCrop(
+            @RequestPart("cropCode") String cropCode,
+            @RequestPart("logCode") String logCode
+    ) {
+        cropService.createLogForCrop(cropCode,logCode);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "/log", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
+    public ResponseEntity<Void> deleteLogForCrop(
+            @RequestPart("cropCode") String cropCode,
+            @RequestPart("logCode") String logCode){
+        cropService.deleteLogForCrop(cropCode,logCode);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

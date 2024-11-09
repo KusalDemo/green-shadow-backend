@@ -13,4 +13,7 @@ public interface CropService {
     void deleteCrop(String cropCode);
     CropDTO findCrop(String cropCode);
     List<CropDTO> getCropsByName(String name);
+    void createLogForCrop(String cropCode,String logCode);
+
+    void deleteLogForCrop(String cropCode, String logCode);
 }

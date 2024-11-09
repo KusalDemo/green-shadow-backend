@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/log")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class LogController {
     @Autowired
     private LogService logService;
@@ -79,5 +78,25 @@ public class LogController {
     public List<LogDTO> getLogsBetweenDates(@RequestParam("start") String date1, @RequestParam("end") String  date2) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return logService.getLogsBetweenDates(formatter.parse(date1), formatter.parse(date2));
+    }
+
+    @PostMapping(value = "/crop", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
+    public ResponseEntity<Void> createLogForCrop(
+            @RequestPart("cropCode") String cropCode,
+            @RequestPart("logCode") String logCode
+    ) {
+        logService.createLogForCrop(cropCode,logCode);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "/crop", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
+    public ResponseEntity<Void> deleteLogForCrop(
+            @RequestPart("cropCode") String cropCode,
+            @RequestPart("logCode") String logCode
+    ) {
+        logService.deleteLogForCrop(cropCode,logCode);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
