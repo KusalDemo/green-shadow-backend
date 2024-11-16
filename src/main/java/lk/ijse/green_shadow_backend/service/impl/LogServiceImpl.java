@@ -30,10 +30,11 @@ public class LogServiceImpl implements LogService {
     private Mapping mapper;
 
     @Override
-    public void saveLog(LogDTO logDto) {
+    public String saveLog(LogDTO logDto) {
         logDto.setLogCode(AppUtil.generateLogCode());
         logDao.save(mapper.mapToLog(logDto));
         log.info("Log saved successfully with code: {}", logDto.getLogCode());
+        return logDto.getLogCode();
     }
 
     @Override
@@ -107,5 +108,10 @@ public class LogServiceImpl implements LogService {
         fetchedCrop.removeLog(fetchedLog);
         cropDAO.save(fetchedCrop);
         log.warn("Log deleted successfully with code: {}", logCode);
+    }
+
+    @Override
+    public List<LogDTO> findLogsByCropCode(String cropCode) {
+        return mapper.mapToLogDTOList(logDao.findLogsByCropCode(cropCode));
     }
 }

@@ -26,9 +26,6 @@ public class Crop implements SuperEntity {
     @ManyToOne
     @JoinColumn(name = "fieldCode")
     private Field field;
-    /*@ManyToOne
-    @JoinColumn(name = "logCode")
-    private Log log;*/
 
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinTable(

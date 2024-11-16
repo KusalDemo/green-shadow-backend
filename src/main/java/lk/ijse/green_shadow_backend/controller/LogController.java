@@ -22,10 +22,10 @@ public class LogController {
     @Autowired
     private LogService logService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> saveLog(@RequestBody LogDTO logDTO) {
-        logService.saveLog(logDTO);
+        String savedLogCode = logService.saveLog(logDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -98,5 +98,11 @@ public class LogController {
     ) {
         logService.deleteLogForCrop(cropCode,logCode);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(value = "/crop/{cropCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
+    public List<LogDTO> getLogsByCropCode(@PathVariable("cropCode") String cropCode) {
+        return logService.findLogsByCropCode(cropCode);
     }
 }

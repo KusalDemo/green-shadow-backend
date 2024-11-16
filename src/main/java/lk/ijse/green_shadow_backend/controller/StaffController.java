@@ -94,4 +94,9 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value = "field/{fieldCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<StaffDTO> findStaffByFieldCode(@PathVariable("fieldCode") String fieldCode) {
+        return staffService.findStaffByFieldCode(fieldCode);
+    }
 }

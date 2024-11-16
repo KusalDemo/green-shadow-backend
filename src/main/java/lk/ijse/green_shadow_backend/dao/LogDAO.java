@@ -12,4 +12,7 @@ import java.util.List;
 public interface LogDAO extends JpaRepository<Log,String> {
     @Query("SELECT l FROM Log l WHERE l.logDate BETWEEN :date1 AND :date2")
     List<Log> getLogsBetweenDates(Date date1, Date date2);
+
+    @Query("SELECT l FROM Log l JOIN l.crops c WHERE c.cropCode = :cropCode")
+    List<Log> findLogsByCropCode(String cropCode);
 }

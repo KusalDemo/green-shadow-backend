@@ -122,4 +122,9 @@ public class StaffServiceImpl implements StaffService {
         staffDao.save(fetchedStaff);
         log.warn("Field removed from staff successfully with id: {} and field code: {}", staffId, fieldCode);
     }
+
+    @Override
+    public List<StaffDTO> findStaffByFieldCode(String fieldCode) {
+        return mapper.mapToStaffDTOList(staffDao.findStaffByFieldCode(fieldCode));
+    }
 }

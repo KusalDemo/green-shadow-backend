@@ -17,4 +17,5 @@ public interface StaffService {
 
     void assignFieldToStaff(String staffId, String fieldCode);
     void removeFieldFromStaff(String staffId, String fieldCode);
+    List<StaffDTO> findStaffByFieldCode(String fieldCode);
 }

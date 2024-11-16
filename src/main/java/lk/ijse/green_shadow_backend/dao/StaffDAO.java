@@ -21,4 +21,7 @@ public interface StaffDAO extends JpaRepository<Staff, String> {
 
     /*@Query("SELECT s FROM Staff s WHERE s.firstName LIKE CONCAT(:name, '%') OR s.lastName LIKE CONCAT(:name, '%')")
     List<Staff> findByStaffName(String staffName);*/
+
+    @Query("SELECT s FROM Field f JOIN f.staff s WHERE f.fieldCode = :fieldCode")
+    List<Staff> findStaffByFieldCode(String fieldCode);
 }

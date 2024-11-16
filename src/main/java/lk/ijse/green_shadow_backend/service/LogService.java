@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface LogService {
-    void saveLog(LogDTO logDto);
+    String saveLog(LogDTO logDto);
     void uploadObservedImage(String logCode,String observedImage);
     List<LogDTO> getAllLogs();
     void deleteLog(String logCode);
@@ -17,4 +17,5 @@ public interface LogService {
     void createLogForCrop(String cropCode, String logCode);
 
     void deleteLogForCrop(String cropCode, String logCode);
+    List<LogDTO> findLogsByCropCode(String cropCode);
 }
