@@ -10,7 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -33,9 +35,18 @@ public class LogController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
     public ResponseEntity<Void> uploadObservedImage(
             @RequestPart("logCode") String logCode,
-            @RequestPart("observedImage") String observedImage
-    ) {
+            @RequestPart("observedImage") MultipartFile observedImage
+    ) throws IOException {
         if (Regex.LOG_CODE.validate(logCode)) {
+
+            String contentType = observedImage.getContentType();
+            if (contentType == null ||
+                    !(contentType.equals("image/jpeg") ||
+                            contentType.equals("image/jpg") ||
+                            contentType.equals("image/png"))) {
+                return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+            }
+
             byte[] observedImageBytes = observedImage.getBytes();
             String convertedImageToBase64 = AppUtil.convertImageToBase64(observedImageBytes);
             logService.uploadObservedImage(logCode, convertedImageToBase64);
