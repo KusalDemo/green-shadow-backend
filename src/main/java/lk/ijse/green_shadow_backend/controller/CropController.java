@@ -64,6 +64,9 @@ public class CropController {
             @RequestPart("image") MultipartFile image) throws IOException {
 
         if (Regex.CROP_CODE.validate(cropCode)) {
+            if (!AppUtil.isImageValidType(image)) {
+                return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+            }
             byte[] imageBytes = image.getBytes();
             String cropImageBase64 = AppUtil.convertImageToBase64(imageBytes);
             cropService.saveImage(cropCode, cropImageBase64);
