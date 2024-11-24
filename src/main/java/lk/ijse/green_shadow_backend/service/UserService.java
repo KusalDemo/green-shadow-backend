@@ -11,6 +11,6 @@ public interface UserService {
     void register(UserDTO userDTO);
     JWTAuthResponse login(UserDTO userDTO);
     JWTAuthResponse refresh(String accessToken);
-    void update(UserDTO userDTO);
+    void updatePassword(UserDTO userDTO,String newPassword);
     void delete(UserDTO userDTO);
 }

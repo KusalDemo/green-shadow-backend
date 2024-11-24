@@ -1,6 +1,7 @@
 package lk.ijse.green_shadow_backend.controller;
 
 import lk.ijse.green_shadow_backend.dto.impl.UserDTO;
+import lk.ijse.green_shadow_backend.dto.impl.UserPasswordRenewRequestDTO;
 import lk.ijse.green_shadow_backend.secure.JWTAuthResponse;
 import lk.ijse.green_shadow_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,9 @@ public class UserController {
         return ResponseEntity.ok(userService.refresh(accessToken));
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> update(@RequestBody UserDTO userDTO) {
-        userService.update(userDTO);
+    @PutMapping(value = "/password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> update(@RequestBody UserPasswordRenewRequestDTO renewRequestDTO) {
+        userService.updatePassword(renewRequestDTO.getUserDTO(), renewRequestDTO.getNewPassword());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

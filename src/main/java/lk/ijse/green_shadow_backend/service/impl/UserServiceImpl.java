@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(UserDTO userDTO){
+    public void updatePassword(UserDTO userDTO,String newPassword) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userDTO.getEmail(),
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
             if (fetchedUser == null) {
                 throw new UsernameNotFoundException("User not found");
             }
-            fetchedUser.setPassword(encoder.encode(userDTO.getPassword()));
+            fetchedUser.setPassword(encoder.encode(newPassword));
             userDao.save(fetchedUser);
         }
     }
