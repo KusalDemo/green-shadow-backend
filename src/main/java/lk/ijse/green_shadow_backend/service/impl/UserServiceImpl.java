@@ -106,6 +106,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateUserRole(UserDTO userDTO) {
+        Role role = userDTO.getRole();
+        String roleCode = userDTO.getRoleClarificationCode();
+        if ((role == Role.ADMINISTRATIVE && roleCode.equals(adminClarificationCode))||
+                (role == Role.MANAGER && roleCode.equals(managerClarificationCode))||
+                (role == Role.SCIENTIST && roleCode.equals(scientistClarificationCode))){
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            userDTO.getEmail(),
+                            userDTO.getPassword())
+            );
+            if (auth.isAuthenticated()) {
+                User fetchedUser = userDao.findByEmail(userDTO.getEmail());
+                if (fetchedUser == null) {
+                    throw new UsernameNotFoundException("User not found");
+                }
+                fetchedUser.setRole(role);
+                userDao.save(fetchedUser);
+            }
+        }else{
+            throw new InvalidUserRoleException("Invalid role or clarification code.");
+        }
+    }
+
+
+    @Override
     public void delete(UserDTO userDTO) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
