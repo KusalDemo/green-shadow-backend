@@ -43,12 +43,11 @@ public class UserController {
 
     @PutMapping(value = "/role", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateUserRole(@RequestBody UserDTO userDTO) {
-        System.out.println(userDTO.getEmail()+", "+userDTO.getRole()+", "+userDTO.getRoleClarificationCode());
         userService.updateUserRole(userDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> delete(@RequestBody UserDTO userDTO) {
         userService.delete(userDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -38,9 +38,6 @@ public class LogController {
             @RequestPart("observedImage") MultipartFile observedImage
     ) throws IOException {
         if (Regex.LOG_CODE.validate(logCode)) {
-            if (AppUtil.isImageValidType(observedImage)) {
-                return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-            }
             byte[] observedImageBytes = observedImage.getBytes();
             String convertedImageToBase64 = AppUtil.convertImageToBase64(observedImageBytes);
             logService.uploadObservedImage(logCode, convertedImageToBase64);
