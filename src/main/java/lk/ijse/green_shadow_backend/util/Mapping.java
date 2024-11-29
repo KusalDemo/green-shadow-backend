@@ -90,6 +90,7 @@ public class Mapping {
             staffDTO.setDesignation(staff.getDesignation());
             staffDTO.setGender(staff.getGender());
             staffDTO.setJoinedDate(staff.getJoinedDate());
+            staffDTO.setDob(staff.getDob());
             staffDTO.setAddressLine1(staff.getAddressLine1());
             staffDTO.setAddressLine2(staff.getAddressLine2());
             staffDTO.setAddressLine3(staff.getAddressLine3());

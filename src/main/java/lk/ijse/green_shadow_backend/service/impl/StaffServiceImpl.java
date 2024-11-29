@@ -62,7 +62,7 @@ public class StaffServiceImpl implements StaffService {
             staff.setContactNumber(staffDTO.getContactNumber());
             staff.setEmail(staffDTO.getEmail());
             staff.setRole(staffDTO.getRole());
-            staff.setDOB(staffDTO.getDOB());
+            staff.setDob(staffDTO.getDob());
             staff.setLog(mapper.mapToLog(logService.findLog(staffDTO.getLogCode())));
             staffDao.save(staff);
             log.info("Staff updated successfully with id: {}", id);
