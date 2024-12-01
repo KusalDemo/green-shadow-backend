@@ -14,4 +14,5 @@ public interface UserService {
     void updatePassword(UserDTO userDTO,String newPassword);
     void updateUserRole(UserDTO userDTO);
     void delete(UserDTO userDTO);
+    String getUserRole(UserDTO userDTO);
 }

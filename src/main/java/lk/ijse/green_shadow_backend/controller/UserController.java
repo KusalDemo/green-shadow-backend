@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.InvalidRoleInfoException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -51,5 +52,11 @@ public class UserController {
     public ResponseEntity<Void> delete(@RequestBody UserDTO userDTO) {
         userService.delete(userDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @PostMapping(value = "/get-role", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String,String>> getUserRole(@RequestBody UserDTO userDTO){
+        String userRole = userService.getUserRole(userDTO);
+        System.out.println("UserRole : "+userRole);
+        return ResponseEntity.ok(Map.of("userRole",userRole));
     }
 }

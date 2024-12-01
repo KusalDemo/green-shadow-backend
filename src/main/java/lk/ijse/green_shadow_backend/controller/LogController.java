@@ -48,7 +48,7 @@ public class LogController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST')")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('SCIENTIST') or hasRole('ADMINISTRATIVE')")
     public List<LogDTO> getAllLogs() {
         return logService.getAllLogs();
     }

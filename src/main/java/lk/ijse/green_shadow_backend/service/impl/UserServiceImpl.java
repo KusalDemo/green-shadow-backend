@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService {
             }
             fetchedUser.setPassword(encoder.encode(newPassword));
             userDao.save(fetchedUser);
+            log.info("Password updated for user: {}", userDTO.getEmail());
         }
     }
 
@@ -124,6 +125,7 @@ public class UserServiceImpl implements UserService {
                 }
                 fetchedUser.setRole(role);
                 userDao.save(fetchedUser);
+                log.info("User: {} updated successfully with role: {}", userDTO.getEmail(), role);
             }
         }else{
             throw new InvalidUserRoleException("Invalid role or clarification code.");
@@ -140,6 +142,21 @@ public class UserServiceImpl implements UserService {
         );
         if (auth.isAuthenticated()) {
             userDao.deleteById(userDTO.getEmail());
+            log.info("User: {} deleted successfully", userDTO.getEmail());
         }
+    }
+
+    @Override
+    public String getUserRole(UserDTO userDTO) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userDTO.getEmail(),
+                        userDTO.getPassword())
+        );
+        if (auth.isAuthenticated()) {
+            User fetchedUser = userDao.findByEmail(userDTO.getEmail());
+            return fetchedUser.getRole().toString();
+        }
+        return null;
     }
 }

@@ -1,7 +1,4 @@
 package lk.ijse.green_shadow_backend.util;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Base64;
